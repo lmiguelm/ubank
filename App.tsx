@@ -12,7 +12,7 @@ import {
   Ubuntu_400Regular_Italic,
 } from '@expo-google-fonts/ubuntu';
 
-import { Client } from './src/pages/Client';
+import { Routes } from './src/routes';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -26,7 +26,7 @@ export default function App() {
   }
   return (
     <ThemeProvider theme={PrimaryTheme}>
-      <Client />
+      <Routes />
       <StatusBar style="light" backgroundColor="#F2822C" />
     </ThemeProvider>
   );
