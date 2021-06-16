@@ -1,12 +1,32 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { CardButton } from '../CardButton';
 
 import { Container, TextInfo, InfoContainer, Arrow, ButtonsContainer } from './styles';
 
+import { useNavigation } from '@react-navigation/native';
+import { IClientData } from '../../types/IClient';
+
 export function ClientCard() {
+  const { navigate } = useNavigation();
+
   const [isActive, setIsActive] = useState(false);
+
+  const handleToAccountPage = useCallback(() => {
+    navigate('Account');
+  }, []);
+
+  const handleToRegisterClient = useCallback(() => {
+    const data: IClientData = {
+      name: 'Luis Miguel',
+      cpf: '504.945.939-55',
+      birthDate: '18/07/2001',
+    };
+
+    navigate('RegisterClient', data);
+  }, []);
+
+  async function handleRemoveClient() {}
 
   function toggleActive() {
     setIsActive(!isActive);
@@ -26,9 +46,9 @@ export function ClientCard() {
 
       {isActive && (
         <ButtonsContainer>
-          <CardButton title="Contas" iconName="credit-card" />
-          <CardButton title="Editar" iconName="edit" />
-          <CardButton title="Remover" iconName="trash-2" />
+          <CardButton onPress={handleToAccountPage} title="Contas" iconName="credit-card" />
+          <CardButton onPress={handleToRegisterClient} title="Editar" iconName="edit" />
+          <CardButton onPress={handleRemoveClient} title="Remover" iconName="trash-2" />
         </ButtonsContainer>
       )}
     </Container>

@@ -33,6 +33,8 @@ export function RegisterClient() {
   const { params } = useRoute();
   const { name: nameParams, cpf: cpfParams, birthDate: birthDateParams } = params as IClientData;
 
+  const isNewUser = !!(nameParams && cpfParams && birthDateParams);
+
   const [keyboardIsActive, setKeyboardIsActive] = useState(false);
 
   const [cpf, setCpf] = useState<string>(cpfParams ?? '');
@@ -90,7 +92,11 @@ export function RegisterClient() {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Content>
-            {!keyboardIsActive ? <SecondHeader title="Novo Usuário" /> : <View />}
+            {!keyboardIsActive ? (
+              <SecondHeader title={!isNewUser ? 'Novo Usuário' : `Editando ${name}`} />
+            ) : (
+              <View />
+            )}
 
             <Form>
               <Input value={cpf} onChangeText={(cpf) => setCpf(cpf)} placeholder="CPF" type="cpf" />
