@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { CardButton } from '../CardButton';
 
 import { Container, TextInfo, InfoContainer, Arrow, ButtonsContainer } from './styles';
@@ -33,24 +33,26 @@ export function ClientCard() {
   }
 
   return (
-    <Container>
-      <InfoContainer>
-        <TextInfo>😀 Luis Miguel</TextInfo>
-        <TextInfo>📄 504.945.939-55</TextInfo>
-        <TextInfo>🎂 18/07/2001</TextInfo>
-      </InfoContainer>
+    <TouchableWithoutFeedback onPress={toggleActive}>
+      <Container>
+        <InfoContainer>
+          <TextInfo>😀 Luis Miguel</TextInfo>
+          <TextInfo>📄 504.945.939-55</TextInfo>
+          <TextInfo>🎂 18/07/2001</TextInfo>
+        </InfoContainer>
 
-      <TouchableOpacity onPress={toggleActive} activeOpacity={0.8}>
-        {!isActive ? <Arrow name="chevron-down" /> : <Arrow name="chevron-up" />}
-      </TouchableOpacity>
+        <TouchableOpacity onPress={toggleActive} activeOpacity={0.8}>
+          {!isActive ? <Arrow name="chevron-down" /> : <Arrow name="chevron-up" />}
+        </TouchableOpacity>
 
-      {isActive && (
-        <ButtonsContainer>
-          <CardButton onPress={handleToAccountPage} title="Contas" iconName="credit-card" />
-          <CardButton onPress={handleToRegisterClient} title="Editar" iconName="edit" />
-          <CardButton onPress={handleRemoveClient} title="Remover" iconName="trash-2" />
-        </ButtonsContainer>
-      )}
-    </Container>
+        {isActive && (
+          <ButtonsContainer>
+            <CardButton onPress={handleToAccountPage} title="Contas" iconName="credit-card" />
+            <CardButton onPress={handleToRegisterClient} title="Editar" iconName="edit" />
+            <CardButton onPress={handleRemoveClient} title="Remover" iconName="trash-2" />
+          </ButtonsContainer>
+        )}
+      </Container>
+    </TouchableWithoutFeedback>
   );
 }

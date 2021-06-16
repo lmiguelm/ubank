@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ScrollView, TouchableWithoutFeedback } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, Keyboard } from 'react-native';
 
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
@@ -8,8 +8,6 @@ import { Header, Subtitle, TextButton, Title, Button } from './styles';
 import { Input } from '../../components/Input';
 import { Button as ComponentButton } from '../../components/Button';
 import Feather from '@expo/vector-icons/Feather';
-import { Keyboard } from 'react-native';
-import { useEffect } from 'react';
 
 interface IHeadeProps {
   title: 'Clientes' | 'Contas';
@@ -42,51 +40,49 @@ export function PrimaryHeader({ title, subtitle, onNew, onFilter, onRefresh }: I
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <Header style={{ marginTop: getStatusBarHeight() }}>
-        <Title>{title}</Title>
-        <Subtitle>{subtitle}</Subtitle>
+    <Header style={{ marginTop: getStatusBarHeight() }}>
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Button onPress={onNew}>
-            <Feather name="plus" size={20} color="#F2822C" />
-            <TextButton>{title == 'Clientes' ? 'Novo' : 'Nova'}</TextButton>
-          </Button>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <Button onPress={onNew}>
+          <Feather name="plus" size={20} color="#F2822C" />
+          <TextButton>{title == 'Clientes' ? 'Novo' : 'Nova'}</TextButton>
+        </Button>
 
-          <Button onPress={toggleFilter} style={activeFilter ? { backgroundColor: '#0D5794' } : {}}>
-            <Feather name="search" size={20} color={activeFilter ? 'white' : '#F2822C'} />
-            <TextButton style={activeFilter ? { color: 'white' } : { color: '#F2822C' }}>
-              Filtrar
-            </TextButton>
-          </Button>
+        <Button onPress={toggleFilter} style={activeFilter ? { backgroundColor: '#0D5794' } : {}}>
+          <Feather name="search" size={20} color={activeFilter ? 'white' : '#F2822C'} />
+          <TextButton style={activeFilter ? { color: 'white' } : { color: '#F2822C' }}>
+            Filtrar
+          </TextButton>
+        </Button>
 
-          <Button onPress={onRefresh}>
-            <Feather name="refresh-ccw" size={20} color="#F2822C" />
-            <TextButton>Recarregar</TextButton>
-          </Button>
-        </ScrollView>
+        <Button onPress={onRefresh}>
+          <Feather name="refresh-ccw" size={20} color="#F2822C" />
+          <TextButton>Recarregar</TextButton>
+        </Button>
+      </ScrollView>
 
-        {activeFilter && (
-          <>
-            <Input
-              value={filterValue}
-              onChangeText={(value) => setFilterValue(value)}
-              placeholder={title == 'Clientes' ? 'Informe o nome' : 'Informe o número'}
-              style={{ marginVertical: 10, alignSelf: 'center', fontSize: 18, width: '100%' }}
-            />
-            <ComponentButton
-              enabled={enabledButton}
-              onPress={handleFilter}
-              style={
-                enabledButton
-                  ? { marginBottom: 30, alignSelf: 'center', width: '100%' }
-                  : { marginBottom: 30, alignSelf: 'center', width: '100%', opacity: 0.8 }
-              }
-              title="Buscar"
-            />
-          </>
-        )}
-      </Header>
-    </TouchableWithoutFeedback>
+      {activeFilter && (
+        <>
+          <Input
+            value={filterValue}
+            onChangeText={(value) => setFilterValue(value)}
+            placeholder={title == 'Clientes' ? 'Informe o nome' : 'Informe o número'}
+            style={{ marginVertical: 10, alignSelf: 'center', fontSize: 18, width: '100%' }}
+          />
+          <ComponentButton
+            enabled={enabledButton}
+            onPress={handleFilter}
+            style={
+              enabledButton
+                ? { marginBottom: 30, alignSelf: 'center', width: '100%' }
+                : { marginBottom: 30, alignSelf: 'center', width: '100%', opacity: 0.8 }
+            }
+            title="Buscar"
+          />
+        </>
+      )}
+    </Header>
   );
 }
