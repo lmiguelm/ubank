@@ -6,7 +6,7 @@ export const Container = styled.View`
   width: 300px;
 
   background-color: ${(props) => props.theme.colors.light};
-  border: 3px solid ${(props) => props.theme.colors.orange};
+  border: 2px solid ${(props) => props.theme.colors.orange};
   border-radius: 10px;
 
   margin-bottom: 10px;
@@ -20,6 +20,7 @@ export const TextInfo = styled.Text`
   font-size: 24px;
   line-height: 40px;
   font-family: ${(props) => props.theme.fonts.regular};
+  color: ${(props) => props.theme.colors.black};
 `;
 
 export const Arrow = styled(Feather)`
