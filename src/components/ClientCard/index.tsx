@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { Alert, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { CardButton } from '../CardButton';
 
 import { Container, TextInfo, InfoContainer, Arrow, ButtonsContainer } from './styles';
@@ -26,7 +26,20 @@ export function ClientCard() {
     navigate('RegisterClient', data);
   }, []);
 
-  async function handleRemoveClient() {}
+  async function handleRemoveClient() {
+    Alert.alert(`Remover`, `Deseja remover xxx ?`, [
+      {
+        text: 'Não',
+        style: 'cancel',
+      },
+      {
+        text: 'Sim',
+        onPress: async () => {
+          console.log('usuário removido');
+        },
+      },
+    ]);
+  }
 
   function toggleActive() {
     setIsActive(!isActive);
