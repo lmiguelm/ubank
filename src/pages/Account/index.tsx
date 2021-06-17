@@ -1,39 +1,54 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+import { Modal, Text } from 'react-native';
+
 import { Container, List } from './styles';
 
 import { PrimaryHeader } from '../../components/PrimaryHeader';
 import { AccountCard } from '../../components/AccountCard';
-import { useNavigation } from '@react-navigation/native';
-import { IClientData } from '../../types/IClient';
+import { AccountModal } from './AccountModal';
 
 export function Account() {
-  const { navigate } = useNavigation();
+  const [showModal, setShowModal] = useState<boolean>(false);
 
-  const onNewUser = useCallback(() => {
-    navigate('RegisterClient', {} as IClientData);
+  const onNewAccount = useCallback(() => {
+    setShowModal(true);
   }, []);
 
-  const onFilterUsers = useCallback((callback: string) => {
+  const onFilterAccounts = useCallback((callback: string) => {
     console.log(callback);
   }, []);
 
-  const onRefreshUsers = useCallback(() => {}, []);
+  const onRefreshAccount = useCallback(() => {}, []);
+
+  const handleCloseModal = useCallback(() => {
+    setShowModal((oldstate) => !oldstate);
+  }, []);
 
   return (
-    <Container>
-      <PrimaryHeader
-        title="Contas"
-        subtitle="Todas as contas de Luis Miguel"
-        onNew={onNewUser}
-        onFilter={onFilterUsers}
-        onRefresh={onRefreshUsers}
-      />
+    <>
+      <Container>
+        <PrimaryHeader
+          title="Contas"
+          subtitle="Todas as contas de Luis Miguel"
+          onNew={onNewAccount}
+          onFilter={onFilterAccounts}
+          onRefresh={onRefreshAccount}
+        />
 
-      <List
-        data={[1, 2, 3, 4, 5, 6]}
-        renderItem={() => <AccountCard />}
-        showsVerticalScrollIndicator={false}
+        <List
+          data={[1, 2, 3, 4, 5, 6]}
+          renderItem={() => <AccountCard />}
+          showsVerticalScrollIndicator={false}
+        />
+      </Container>
+
+      <AccountModal
+        onRequestClose={handleCloseModal}
+        transparent={true}
+        animationType="fade"
+        visible={showModal}
+        handleCloseModal={handleCloseModal}
       />
-    </Container>
+    </>
   );
 }
