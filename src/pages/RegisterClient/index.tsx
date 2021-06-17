@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import {
-  View,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -9,7 +8,7 @@ import {
 } from 'react-native';
 
 import Feather from '@expo/vector-icons/Feather';
-import { Container, Content, DatePickerContainer, Form, Placeholder } from './styles';
+import { Container, DatePickerContainer, Form, Placeholder } from './styles';
 
 import { SecondHeader } from '../../components/SecondHeader';
 import { Input } from '../../components/Input';
@@ -35,8 +34,6 @@ export function RegisterClient() {
 
   const isNewUser = !!(nameParams && cpfParams && birthDateParams);
 
-  const [keyboardIsActive, setKeyboardIsActive] = useState(false);
-
   const [cpf, setCpf] = useState<string>(cpfParams ?? '');
   const [name, setName] = useState<string>(nameParams ?? '');
   const [birthDate, setBithDate] = useState<Date | undefined>(
@@ -45,11 +42,6 @@ export function RegisterClient() {
 
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => setKeyboardIsActive(true));
-    Keyboard.addListener('keyboardDidHide', () => setKeyboardIsActive(false));
-  }, []);
 
   useEffect(() => {
     if (name?.length !== 0 && String(unmaskCpf(String(cpf))).length === 11 && birthDate) {
@@ -85,18 +77,14 @@ export function RegisterClient() {
   }
 
   return (
-    <Container>
+    <>
       <KeyboardAvoidingView
+        style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1, width: '100%' }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <Content>
-            {!keyboardIsActive ? (
-              <SecondHeader title={!isNewUser ? 'Novo Usuário' : `Editando ${name}`} />
-            ) : (
-              <View />
-            )}
+          <Container>
+            <SecondHeader title={!isNewUser ? 'Novo Cliente' : `Editando ${name}`} />
 
             <Form>
               <Input value={cpf} onChangeText={(cpf) => setCpf(cpf)} placeholder="CPF" type="cpf" />
@@ -122,16 +110,6 @@ export function RegisterClient() {
                 </DatePickerContainer>
               </TouchableOpacity>
 
-              {showDatePicker && (
-                <Picker
-                  mode="date"
-                  maximumDate={new Date()}
-                  value={birthDate ?? new Date()}
-                  onChange={handleChangePicker}
-                  locale="pt-BR"
-                />
-              )}
-
               <Button
                 onPress={handleSaveNewClient}
                 title="Salvar"
@@ -139,10 +117,19 @@ export function RegisterClient() {
                 style={enabledButton ? { marginTop: 20 } : { marginTop: 20, opacity: 0.5 }}
               />
             </Form>
-            <View />
-          </Content>
+          </Container>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </Container>
+
+      {showDatePicker && (
+        <Picker
+          mode="date"
+          maximumDate={new Date()}
+          value={birthDate ?? new Date()}
+          onChange={handleChangePicker}
+          locale="pt-BR"
+        />
+      )}
+    </>
   );
 }

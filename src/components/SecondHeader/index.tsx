@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
+import { RectButton } from 'react-native-gesture-handler';
 
-import { Container, Icon, Title, IconContainer } from './styles';
+import { Container, Icon, Title } from './styles';
 
 interface ISecondHeaderProps {
   title: string;
@@ -12,9 +13,9 @@ export function SecondHeader({ title }: ISecondHeaderProps) {
 
   return (
     <Container>
-      <IconContainer onPress={goBack}>
+      <RectButton onPress={goBack}>
         <Icon name="arrow-left" />
-      </IconContainer>
+      </RectButton>
 
       <Title>{title}</Title>
     </Container>

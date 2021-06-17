@@ -22,7 +22,11 @@ export function AccountCard() {
   }
 
   function handleEditAccount() {}
-  function handleToExtract() {}
+
+  function handleToAccountStatement() {
+    // todo passar os dados da conta...
+    navigate('AccountStatement');
+  }
 
   async function handleRemoveAccount() {
     Alert.alert(`Remover`, `Deseja remover xxx ?`, [
@@ -62,7 +66,7 @@ export function AccountCard() {
           <ButtonsContainer>
             <CardButton onPress={handleEditAccount} title="Editar" iconName="edit" />
             <CardButton onPress={handleToDepositPage} title="Depositar" iconName="dollar-sign" />
-            <CardButton onPress={handleToExtract} title="Extrato" iconName="file" />
+            <CardButton onPress={handleToAccountStatement} title="Extrato" iconName="file" />
             <CardButton onPress={handleRemoveAccount} title="Remover" iconName="trash-2" />
           </ButtonsContainer>
         )}

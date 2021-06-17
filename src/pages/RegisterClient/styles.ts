@@ -2,18 +2,17 @@ import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
+  background: ${(props) => props.theme.colors.orange};
   align-items: center;
-
-  background: ${(props) => props.theme.colors.light};
-`;
-
-export const Content = styled.View`
-  flex: 1;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
 export const Form = styled.View`
+  padding: 20px;
   align-self: center;
+  background: ${(props) => props.theme.colors.light};
+  border-radius: 10px;
+  margin-bottom: 30px;
 `;
 
 export const DatePickerContainer = styled.View`

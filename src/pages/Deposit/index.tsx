@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -8,7 +7,7 @@ import {
   Alert,
 } from 'react-native';
 
-import { Container, Content, Form } from './styles';
+import { Container, Form } from './styles';
 
 import { SecondHeader } from '../../components/SecondHeader';
 import { Input } from '../../components/Input';
@@ -25,16 +24,11 @@ export function Deposit() {
   const { params } = useRoute();
   const { name } = params as IDepositData;
 
-  const [keyboardIsActive, setKeyboardIsActive] = useState(false);
+  const [setKeyboardIsActive] = useState(false);
 
   const [balance, setBalance] = useState<string>('');
 
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
-
-  useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', () => setKeyboardIsActive(true));
-    Keyboard.addListener('keyboardDidHide', () => setKeyboardIsActive(false));
-  }, []);
 
   useEffect(() => {
     Alert.alert(
@@ -75,37 +69,34 @@ export function Deposit() {
   }
 
   return (
-    <Container>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1, width: '100%' }}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <Content>
-            {!keyboardIsActive ? <SecondHeader title={`Depositao ${name}`} /> : <View />}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1, width: '100%' }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <Container>
+          <SecondHeader title={`Depósito para ${name}`} />
 
-            <Form>
-              <Input
-                value={balance}
-                options={{
-                  maskType: 'BRL',
-                }}
-                type="money"
-                onChangeText={(balance) => setBalance(balance)}
-                placeholder="Valor"
-              />
+          <Form>
+            <Input
+              value={balance}
+              options={{
+                maskType: 'BRL',
+              }}
+              type="money"
+              onChangeText={(balance) => setBalance(balance)}
+              placeholder="Valor"
+            />
 
-              <Button
-                onPress={handleSaveDeposit}
-                title="Depositar"
-                enabled={enabledButton}
-                style={enabledButton ? { marginTop: 20 } : { marginTop: 20, opacity: 0.5 }}
-              />
-            </Form>
-            <View />
-          </Content>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </Container>
+            <Button
+              onPress={handleSaveDeposit}
+              title="Depositar"
+              enabled={enabledButton}
+              style={enabledButton ? { marginTop: 20 } : { marginTop: 20, opacity: 0.5 }}
+            />
+          </Form>
+        </Container>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
