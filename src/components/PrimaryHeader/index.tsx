@@ -10,7 +10,7 @@ import { Button as ComponentButton } from '../../components/Button';
 import Feather from '@expo/vector-icons/Feather';
 
 interface IHeadeProps {
-  title: 'Clientes' | 'Contas';
+  title: 'Clientes' | 'Contas' | 'Extrato';
   subtitle?: string;
   onNew: () => void;
   onFilter: (callback: string) => void;
@@ -45,10 +45,12 @@ export function PrimaryHeader({ title, subtitle, onNew, onFilter, onRefresh }: I
       <Subtitle>{subtitle}</Subtitle>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <Button onPress={onNew}>
-          <Feather name="plus" size={20} color="#F2822C" />
-          <TextButton>{title == 'Clientes' ? 'Novo' : 'Nova'}</TextButton>
-        </Button>
+        {title !== 'Extrato' && (
+          <Button onPress={onNew}>
+            <Feather name="plus" size={20} color="#F2822C" />
+            <TextButton>{title == 'Clientes' ? 'Novo' : 'Nova'}</TextButton>
+          </Button>
+        )}
 
         <Button onPress={toggleFilter} style={activeFilter ? { backgroundColor: '#0D5794' } : {}}>
           <Feather name="search" size={20} color={activeFilter ? 'white' : '#F2822C'} />
