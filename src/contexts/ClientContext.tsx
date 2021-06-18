@@ -29,6 +29,7 @@ export function ClientProvider({ children }: ClientProvideProps) {
   }, []);
 
   async function loadClients() {
+    setLoadedClients(false);
     const { data } = await api.get<IClientData[]>('/clients', {
       params: { _sort: 'name', _order: 'asc' },
     });

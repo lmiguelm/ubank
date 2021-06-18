@@ -24,8 +24,6 @@ export function Deposit() {
   const { params } = useRoute();
   const { name } = params as IDepositData;
 
-  const [setKeyboardIsActive] = useState(false);
-
   const [balance, setBalance] = useState<string>('');
 
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
@@ -58,9 +56,7 @@ export function Deposit() {
       title: 'Opa!',
       emoji: 'smile',
       info: 'Depósito realizado com sucesso.',
-      redirect() {
-        navigate('Client');
-      },
+      routeName: 'Client',
     };
 
     navigate('Feedback', data);

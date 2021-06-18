@@ -13,7 +13,9 @@ import {
 } from '@expo-google-fonts/ubuntu';
 
 import { Routes } from './src/routes';
+
 import { ClientProvider } from './src/contexts/ClientContext';
+import { AccountProvider } from './src/contexts/AccountContext';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -28,7 +30,9 @@ export default function App() {
   return (
     <ThemeProvider theme={PrimaryTheme}>
       <ClientProvider>
-        <Routes />
+        <AccountProvider>
+          <Routes />
+        </AccountProvider>
       </ClientProvider>
       <StatusBar style="light" backgroundColor="#F2822C" />
     </ThemeProvider>

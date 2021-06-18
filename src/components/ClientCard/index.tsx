@@ -9,6 +9,7 @@ import { IClientData } from '../../types/IClient';
 
 import { MaskService } from 'react-native-masked-text';
 import { useClients } from '../../hooks/useClients';
+import { IAccountDataParams } from '../../types/IAccount';
 
 interface IClientCardProps {
   client: IClientData;
@@ -22,7 +23,8 @@ export function ClientCard({ client: { id, name, cpf, birthDate } }: IClientCard
   const [isActive, setIsActive] = useState(false);
 
   const handleToAccountPage = useCallback(() => {
-    navigate('Account');
+    const client = { id, name, cpf, birthDate };
+    navigate('Account', { client } as IAccountDataParams);
   }, []);
 
   async function handleRemoveClient() {

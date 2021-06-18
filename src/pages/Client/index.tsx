@@ -35,7 +35,7 @@ export function Client() {
       <List
         data={filteredClients}
         keyExtractor={(item: any) => String(item.id)}
-        renderItem={({ item }: any) => <ClientCard client={item} />}
+        renderItem={({ item }: any) => <ClientCard client={item} key={item.id} />}
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={!loadedClients} onRefresh={loadClients} />}
       />

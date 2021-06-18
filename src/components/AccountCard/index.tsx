@@ -1,16 +1,29 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { CardButton } from '../CardButton';
+import { MaskService } from 'react-native-masked-text';
 
 import { Container, TextInfo, InfoContainer, Arrow, ButtonsContainer } from './styles';
 
 import { useNavigation } from '@react-navigation/native';
 import { emojis } from '../../utils/emojis';
 import Feather from '@expo/vector-icons/Feather';
-import { IDepositData } from '../../types/IDeposit';
 
-export function AccountCard() {
+import { IDepositData } from '../../types/IDeposit';
+import { IAccountData } from '../../types/IAccount';
+
+import { useAccounts } from '../../hooks/useAccounts';
+
+interface IAccountProps {
+  account: IAccountData;
+}
+
+export function AccountCard({
+  account: { id, clientId, status, password, balance, createdAt, number },
+}: IAccountProps) {
   const { navigate } = useNavigation();
+
+  const { removeAccount, setSelectedAccount } = useAccounts();
 
   const [isActive, setIsActive] = useState(false);
 
@@ -21,15 +34,12 @@ export function AccountCard() {
     navigate('Deposit', data);
   }
 
-  function handleEditAccount() {}
-
   function handleToAccountStatement() {
-    // todo passar os dados da conta...
     navigate('AccountStatement');
   }
 
   async function handleRemoveAccount() {
-    Alert.alert(`Remover`, `Deseja remover xxx ?`, [
+    Alert.alert(`Remover`, `Deseja remover conta ${number} ?`, [
       {
         text: 'Não',
         style: 'cancel',
@@ -37,7 +47,7 @@ export function AccountCard() {
       {
         text: 'Sim',
         onPress: async () => {
-          console.log('usuário removido');
+          removeAccount(id);
         },
       },
     ]);
@@ -52,10 +62,19 @@ export function AccountCard() {
       <Container>
         <InfoContainer>
           <TextInfo>
-            {/* <Feather name="minus-circle" color="red" size={24} /> 12345-6 */}
-            <Feather name="circle" color="green" size={24} /> 12345-6
+            {status ? (
+              <>
+                <Feather name="circle" color="green" size={24} /> {number}
+              </>
+            ) : (
+              <>
+                <Feather name="minus-circle" color="red" size={24} /> {number}
+              </>
+            )}
           </TextInfo>
-          <TextInfo>{emojis.balance} R$ 1.200,00</TextInfo>
+          <TextInfo>
+            {emojis.balance} {MaskService.toMask('money', String(balance), { maskType: 'BRL' })}
+          </TextInfo>
         </InfoContainer>
 
         <TouchableOpacity onPress={toggleActive} activeOpacity={0.8}>
@@ -64,7 +83,13 @@ export function AccountCard() {
 
         {isActive && (
           <ButtonsContainer>
-            <CardButton onPress={handleEditAccount} title="Editar" iconName="edit" />
+            <CardButton
+              onPress={() =>
+                setSelectedAccount({ id, clientId, status, password, balance, createdAt, number })
+              }
+              title="Editar"
+              iconName="edit"
+            />
             <CardButton onPress={handleToDepositPage} title="Depositar" iconName="dollar-sign" />
             <CardButton onPress={handleToAccountStatement} title="Extrato" iconName="file" />
             <CardButton onPress={handleRemoveAccount} title="Remover" iconName="trash-2" />
