@@ -1,83 +1,18 @@
 {
   "clients": [
     {
-      "id": "bf10a3d6-6238-4ca5-80b8-3d432b760ef6",
-      "cpf": "987.371.998-97",
-      "name": "Bruno Vicente Campos",
-      "birthDate": "09/09/1996"
+      "id": "b3a78fdd-1d65-4169-8028-32d9830f3145",
+      "cpf": 11111111111,
+      "name": "miguel",
+      "birthDate": "09/06/2021"
     },
     {
-      "id": "bb620f9d-c1ec-4234-ac5c-b7677769fa91",
-      "cpf": "995.040.354-50",
-      "name": "Allana Helena Castro",
-      "birthDate": "20/07/1989"
-    },
-    {
-      "id": "99516afc-d1f3-4ae9-830e-50c4e4e00596",
-      "name": "Rodrigo Davi Marcelo Moreira",
-      "cpf": "749.570.239-72",
-      "birthDate": "23/11/2003"
-    },
-    {
-      "id": "fe694cec-41f8-45a6-a289-e23d5dcd276f",
-      "name": "Carolina Olivia dos Santos",
-      "cpf": "643.837.848-87",
-      "birthDate": "22/11/1988"
-    },
-    {
-      "id": "22b0be8f-8b58-418a-b6fe-4d7ea319914c",
-      "name": "Vera Liz Martins",
-      "cpf": "387.986.793-33",
-      "birthDate": "09/05/1989"
-    },
-    {
-      "id": "efe8a694-b00a-4405-af53-981b532fce45",
-      "name": "Laís Marli da Rocha",
-      "cpf": "058.130.249-48",
-      "birthDate": "05/11/1964"
-    },
-    {
-      "id": "2fae03c9-cd86-4c3f-9564-e560e9b8abb7",
-      "name": "Flávia Tereza Almeida",
-      "cpf": "405.760.890-79",
-      "birthDate": "05/11/1956"
-    },
-    {
-      "id": "60485723-44c7-46be-98d1-a3b1278db58f",
-      "name": "Francisca Raquel Ferreira",
-      "cpf": "222.179.645-42",
-      "birthDate": "20/07/1949"
-    },
-    {
-      "id": "d25ae807-7bc6-421d-be79-6874e76b5be3",
-      "name": "Aurora Heloisa Freitas",
-      "cpf": "947.505.373-57",
-      "birthDate": "03/07/1965"
-    },
-    {
-      "id": "cbe35432-9363-4a5e-8e47-75694f8881cc",
-      "name": "Diogo Arthur Gustavo Bernardes",
-      "cpf": "574.882.749-20",
-      "birthDate": "14/07/1952"
+      "id": "12e271d3-1c2a-48f3-b061-70e9cbd962a9",
+      "cpf": 23232323232,
+      "name": "Gabriela",
+      "birthDate": "08/06/2021"
     }
   ],
-  "accounts": [
-    {
-      "id": "49de66a2-ead6-4f75-88c0-f347314e34ce",
-      "number": "123456-7",
-      "balance": 9999,
-      "password": "12345",
-      "status": true,
-      "created_date": "17/06/2021",
-      "clientId": "bf10a3d6-6238-4ca5-80b8-3d432b760ef6"
-    }
-  ],
-  "deposits": [
-    {
-      "id": "",
-      "value": "",
-      "description": "",
-      "accountId": ""
-    }
-  ]
+  "accounts": [],
+  "deposits": []
 }

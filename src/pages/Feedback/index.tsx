@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React from 'react';
 import { View } from 'react-native';
 import { Button } from '../../components/Button';
@@ -10,7 +10,13 @@ import { Container, Content, Title, Info, Emoji } from './styles';
 
 export function Feedback() {
   const { params } = useRoute();
-  const { title, emoji, info, buttonTitle, redirect } = params as IFeedbackProps;
+  const { title, emoji, info, buttonTitle, routeName } = params as IFeedbackProps;
+
+  const { navigate } = useNavigation();
+
+  function handleNavigate() {
+    navigate(routeName);
+  }
 
   return (
     <Container>
@@ -22,7 +28,7 @@ export function Feedback() {
         <Info>{info}</Info>
       </Content>
 
-      <Button onPress={redirect} title={buttonTitle} />
+      <Button onPress={handleNavigate} title={buttonTitle} />
     </Container>
   );
 }

@@ -7,8 +7,17 @@ import { Container, TextInfo, InfoContainer, Arrow, ButtonsContainer } from './s
 import { useNavigation } from '@react-navigation/native';
 import { IClientData } from '../../types/IClient';
 
-export function ClientCard() {
+import { MaskService } from 'react-native-masked-text';
+import { useClients } from '../../hooks/useClients';
+
+interface IClientCardProps {
+  client: IClientData;
+}
+
+export function ClientCard({ client: { id, name, cpf, birthDate } }: IClientCardProps) {
   const { navigate } = useNavigation();
+
+  const { removeClient } = useClients();
 
   const [isActive, setIsActive] = useState(false);
 
@@ -16,27 +25,15 @@ export function ClientCard() {
     navigate('Account');
   }, []);
 
-  const handleToRegisterClient = useCallback(() => {
-    const data: IClientData = {
-      name: 'Luis Miguel',
-      cpf: '504.945.939-55',
-      birthDate: '18/07/2001',
-    };
-
-    navigate('RegisterClient', data);
-  }, []);
-
   async function handleRemoveClient() {
-    Alert.alert(`Remover`, `Deseja remover xxx ?`, [
+    Alert.alert(`Remover`, `Deseja remover ${name} ?`, [
       {
         text: 'Não',
         style: 'cancel',
       },
       {
         text: 'Sim',
-        onPress: async () => {
-          console.log('usuário removido');
-        },
+        onPress: () => removeClient(id),
       },
     ]);
   }
@@ -49,9 +46,9 @@ export function ClientCard() {
     <TouchableWithoutFeedback onPress={toggleActive}>
       <Container>
         <InfoContainer>
-          <TextInfo>😀 Luis Miguel</TextInfo>
-          <TextInfo>📄 504.945.939-55</TextInfo>
-          <TextInfo>🎂 18/07/2001</TextInfo>
+          <TextInfo>😀 {name}</TextInfo>
+          <TextInfo>📄 {MaskService.toMask('cpf', String(cpf))}</TextInfo>
+          <TextInfo>🎂 {birthDate}</TextInfo>
         </InfoContainer>
 
         <TouchableOpacity onPress={toggleActive} activeOpacity={0.8}>
@@ -61,7 +58,6 @@ export function ClientCard() {
         {isActive && (
           <ButtonsContainer>
             <CardButton onPress={handleToAccountPage} title="Contas" iconName="credit-card" />
-            <CardButton onPress={handleToRegisterClient} title="Editar" iconName="edit" />
             <CardButton onPress={handleRemoveClient} title="Remover" iconName="trash-2" />
           </ButtonsContainer>
         )}

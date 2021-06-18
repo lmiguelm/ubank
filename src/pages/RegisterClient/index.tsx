@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -6,6 +6,8 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
+
+import { useNavigation } from '@react-navigation/native';
 
 import Feather from '@expo/vector-icons/Feather';
 import { Container, DatePickerContainer, Form, Placeholder } from './styles';
@@ -17,28 +19,22 @@ import Picker, { Event } from '@react-native-community/datetimepicker';
 
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-
 import { unmaskCpf } from '../../utils/mask';
-
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { parse } from 'date-fns/esm';
+import uuid from 'react-native-uuid';
 
 import { IFeedbackProps } from '../../types/IFeedback';
 import { IClientData } from '../../types/IClient';
 
+import { useClients } from '../../hooks/useClients';
+
 export function RegisterClient() {
   const { navigate } = useNavigation();
 
-  const { params } = useRoute();
-  const { name: nameParams, cpf: cpfParams, birthDate: birthDateParams } = params as IClientData;
+  const { newClient } = useClients();
 
-  const isNewUser = !!(nameParams && cpfParams && birthDateParams);
-
-  const [cpf, setCpf] = useState<string>(cpfParams ?? '');
-  const [name, setName] = useState<string>(nameParams ?? '');
-  const [birthDate, setBithDate] = useState<Date | undefined>(
-    birthDateParams ? parse(birthDateParams, 'dd/MM/yyyy', new Date()) : undefined
-  );
+  const [cpf, setCpf] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [birthDate, setBithDate] = useState<Date | undefined>();
 
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
@@ -60,20 +56,32 @@ export function RegisterClient() {
     setBithDate(dateTime ? dateTime : new Date());
   }
 
-  const goToClientPage = useCallback(() => {
-    navigate('Client');
-  }, []);
-
   async function handleSaveNewClient() {
-    const data: IFeedbackProps = {
-      title: 'Opa!',
-      emoji: 'wink',
-      info: 'Cliente salvo com sucesso.',
-      buttonTitle: 'Continuar',
-      redirect: goToClientPage,
+    const userData: IClientData = {
+      id: String(uuid.v4()),
+      cpf: unmaskCpf(cpf),
+      name,
+      birthDate: format(Number(birthDate), 'dd/MM/yyyy', { locale: ptBR }),
     };
 
-    navigate('Feedback', data);
+    try {
+      newClient(userData);
+      navigate('Feedback', {
+        title: 'Opa!',
+        emoji: 'wink',
+        info: 'Cliente salvo com sucesso.',
+        buttonTitle: 'Continuar',
+        routeName: 'Client',
+      } as IFeedbackProps);
+    } catch {
+      navigate('Feedback', {
+        title: 'Ops!',
+        emoji: 'sad',
+        info: 'Infelizmente não conseguimos salvar. Tente novamente.',
+        buttonTitle: 'Entendi',
+        routeName: 'Client',
+      } as IFeedbackProps);
+    }
   }
 
   return (
@@ -84,7 +92,7 @@ export function RegisterClient() {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Container>
-            <SecondHeader title={!isNewUser ? 'Novo Cliente' : `Editando ${name}`} />
+            <SecondHeader title="Novo Cliente" />
 
             <Form>
               <Input value={cpf} onChangeText={(cpf) => setCpf(cpf)} placeholder="CPF" type="cpf" />

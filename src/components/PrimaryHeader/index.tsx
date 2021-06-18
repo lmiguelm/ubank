@@ -60,8 +60,8 @@ export function PrimaryHeader({ title, subtitle, onNew, onFilter, onRefresh }: I
         </Button>
 
         <Button onPress={onRefresh}>
-          <Feather name="refresh-ccw" size={20} color="#F2822C" />
-          <TextButton>Recarregar</TextButton>
+          <Feather name="filter" size={20} color="#F2822C" />
+          <TextButton>Remover filtros</TextButton>
         </Button>
       </ScrollView>
 

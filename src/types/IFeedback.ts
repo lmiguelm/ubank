@@ -5,5 +5,5 @@ export interface IFeedbackProps {
   emoji: IEmoji;
   info: string;
   buttonTitle: string;
-  redirect: () => void;
+  routeName: string;
 }
