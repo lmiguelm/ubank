@@ -12,8 +12,18 @@ import {
 } from './styles';
 
 import { SecondHeader } from '../../components/SecondHeader';
+import { useRoute } from '@react-navigation/native';
+import { IAccountStatementrDetailParams } from '../../types/IAccountStatementDetail';
+import { MaskService } from 'react-native-masked-text';
+import format from 'date-fns/format';
+import ptBR from 'date-fns/esm/locale/pt-BR/index.js';
 
 export function AccountStatementDetail() {
+  const { params } = useRoute();
+  const {
+    deposit: { value, description, createdAt },
+  } = params as IAccountStatementrDetailParams;
+
   return (
     <Container>
       <SecondHeader title="Detalhe do depósito" />
@@ -21,17 +31,22 @@ export function AccountStatementDetail() {
       <Content>
         <BalanceContainer>
           <BalanceTitle>R$</BalanceTitle>
-          <BalanceText>40,00</BalanceText>
+          <BalanceText>
+            {MaskService.toMask('money', String(value), {
+              maskType: 'BRL',
+              unit: '',
+            })}
+          </BalanceText>
         </BalanceContainer>
 
         <InfoContainer>
           <Title>Histórico</Title>
-          <Info>Deposito para o Luis Miguel, 12345-6 no valor de R$ 40,00</Info>
+          <Info>{description}</Info>
         </InfoContainer>
 
         <InfoContainer>
           <Title>Data</Title>
-          <Info>14/06/2121 ás 22:45</Info>
+          <Info>{createdAt}</Info>
         </InfoContainer>
       </Content>
     </Container>

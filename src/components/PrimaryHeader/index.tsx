@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { ScrollView, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
+import Feather from '@expo/vector-icons/Feather';
 
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
-import { Header, Subtitle, TextButton, Title, Button } from './styles';
+import { Header, Subtitle, TextButton, Title, Button, ButtonContainer, Icon } from './styles';
 
 import { Input } from '../../components/Input';
 import { Button as ComponentButton } from '../../components/Button';
-import Feather from '@expo/vector-icons/Feather';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 interface IHeadeProps {
   title: 'Clientes' | 'Contas' | 'Extrato';
@@ -21,6 +22,8 @@ export function PrimaryHeader({ title, subtitle, onNew, onFilter, onRefresh }: I
   const [activeFilter, setActiveFilter] = useState<boolean>(false);
   const [filterValue, setFilterValue] = useState<string>('');
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
+
+  const { goBack } = useNavigation();
 
   useEffect(() => {
     if (filterValue?.length !== 0) {
@@ -41,53 +44,67 @@ export function PrimaryHeader({ title, subtitle, onNew, onFilter, onRefresh }: I
   }
 
   return (
-    <TouchableWithoutFeedback onPressOut={Keyboard.dismiss}>
-      <Header style={{ marginTop: getStatusBarHeight() }}>
-        <Title>{title}</Title>
-        <Subtitle>{subtitle}</Subtitle>
+    <Header style={{ marginTop: getStatusBarHeight() }}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            {title !== 'Clientes' && (
+              <ButtonContainer onPress={goBack}>
+                <Icon name="arrow-left" />
+              </ButtonContainer>
+            )}
+            <Title>{title}</Title>
+          </View>
+          <Subtitle>{subtitle}</Subtitle>
+        </View>
+      </TouchableWithoutFeedback>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {title !== 'Extrato' && (
-            <Button onPress={onNew}>
-              <Feather name="plus" size={20} color="#F2822C" />
-              <TextButton>{title == 'Clientes' ? 'Novo' : 'Nova'}</TextButton>
-            </Button>
-          )}
-
-          <Button onPress={toggleFilter} style={activeFilter ? { backgroundColor: '#0D5794' } : {}}>
-            <Feather name="search" size={20} color={activeFilter ? 'white' : '#F2822C'} />
-            <TextButton style={activeFilter ? { color: 'white' } : { color: '#F2822C' }}>
-              Filtrar
-            </TextButton>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {title !== 'Extrato' && (
+          <Button onPress={onNew}>
+            <Feather name="plus" size={20} color="#F2822C" />
+            <TextButton>{title == 'Clientes' ? 'Novo' : 'Nova'}</TextButton>
           </Button>
-
-          <Button onPress={onRefresh}>
-            <Feather name="filter" size={20} color="#F2822C" />
-            <TextButton>Remover filtros</TextButton>
-          </Button>
-        </ScrollView>
-
-        {activeFilter && (
-          <>
-            <Input
-              value={filterValue}
-              onChangeText={(value) => setFilterValue(value)}
-              placeholder={title == 'Clientes' ? 'Informe o nome' : 'Informe o número'}
-              style={{ marginVertical: 10, alignSelf: 'center', fontSize: 18, width: '100%' }}
-            />
-            <ComponentButton
-              enabled={enabledButton}
-              onPress={handleFilter}
-              style={
-                enabledButton
-                  ? { marginBottom: 30, alignSelf: 'center', width: '100%' }
-                  : { marginBottom: 30, alignSelf: 'center', width: '100%', opacity: 0.8 }
-              }
-              title="Buscar"
-            />
-          </>
         )}
-      </Header>
-    </TouchableWithoutFeedback>
+
+        <Button onPress={toggleFilter} style={activeFilter ? { backgroundColor: '#0D5794' } : {}}>
+          <Feather name="search" size={20} color={activeFilter ? 'white' : '#F2822C'} />
+          <TextButton style={activeFilter ? { color: 'white' } : { color: '#F2822C' }}>
+            Filtrar
+          </TextButton>
+        </Button>
+
+        <Button onPress={onRefresh}>
+          <Feather name="filter" size={20} color="#F2822C" />
+          <TextButton>Remover filtros</TextButton>
+        </Button>
+      </ScrollView>
+
+      {activeFilter && (
+        <>
+          <Input
+            value={filterValue}
+            onChangeText={(value) => setFilterValue(value)}
+            placeholder={title == 'Clientes' ? 'Informe o nome' : 'Informe o número'}
+            style={{ marginVertical: 10, alignSelf: 'center', fontSize: 18, width: '100%' }}
+          />
+          <ComponentButton
+            enabled={enabledButton}
+            onPress={handleFilter}
+            style={
+              enabledButton
+                ? { marginBottom: 30, alignSelf: 'center', width: '100%' }
+                : { marginBottom: 30, alignSelf: 'center', width: '100%', opacity: 0.8 }
+            }
+            title="Buscar"
+          />
+        </>
+      )}
+    </Header>
   );
 }

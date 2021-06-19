@@ -29,4 +29,6 @@ export const Info = styled.Text`
   font-family: ${(props) => props.theme.fonts.regular};
   color: ${(props) => props.theme.colors.light};
   line-height: 30px;
+  padding: 10px 30px;
+  text-align: center;
 `;

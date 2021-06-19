@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
+import Feather from '@expo/vector-icons/Feather';
 
 export const Header = styled.View`
   min-height: 250px;
@@ -48,4 +49,15 @@ export const TextButton = styled.Text`
   text-transform: uppercase;
   font-family: ${(props) => props.theme.fonts.bold};
   margin-left: 5px;
+`;
+
+export const ButtonContainer = styled(RectButton)`
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+`;
+
+export const Icon = styled(Feather)`
+  font-size: 36px;
+  color: ${(props) => props.theme.colors.light};
 `;

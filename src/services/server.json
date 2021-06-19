@@ -1,18 +1,37 @@
 {
   "clients": [
     {
-      "id": "b3a78fdd-1d65-4169-8028-32d9830f3145",
-      "cpf": 11111111111,
-      "name": "miguel",
-      "birthDate": "09/06/2021"
-    },
-    {
-      "id": "12e271d3-1c2a-48f3-b061-70e9cbd962a9",
-      "cpf": 23232323232,
-      "name": "Gabriela",
-      "birthDate": "08/06/2021"
+      "id": "a19069ba-721d-445d-a5a1-c8ab8f61442d",
+      "cpf": 64349494946,
+      "name": "Luis Miguel",
+      "birthDate": "18/07/2001"
     }
   ],
-  "accounts": [],
-  "deposits": []
+  "accounts": [
+    {
+      "id": "c74c089e-1e2a-4eb9-b6b6-7c31295e94e6",
+      "number": "13769-4",
+      "createdAt": "19/06/2021",
+      "balance": 9200,
+      "status": true,
+      "password": "12345",
+      "clientId": "a19069ba-721d-445d-a5a1-c8ab8f61442d"
+    }
+  ],
+  "deposits": [
+    {
+      "id": "3df7c1f9-4039-4482-8e0a-ba71da5b52d8",
+      "value": 8000,
+      "accountId": "c74c089e-1e2a-4eb9-b6b6-7c31295e94e6",
+      "description": "Depósito para o Luis Miguel, 13769-4 no valor de R$80,00",
+      "createdAt": "19/06/2021 13:08"
+    },
+    {
+      "id": "d336cc79-75fd-4b13-9a40-420696ad3cf0",
+      "value": 1200,
+      "accountId": "c74c089e-1e2a-4eb9-b6b6-7c31295e94e6",
+      "description": "Depósito para o Luis Miguel, 13769-4 no valor de R$12,00",
+      "createdAt": "19/06/2021 13:09"
+    }
+  ]
 }

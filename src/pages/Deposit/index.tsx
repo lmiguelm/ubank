@@ -20,9 +20,11 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { IFeedbackProps } from '../../types/IFeedback';
 import { IDepositData, IDepositDataParams } from '../../types/IDeposit';
 
-import { api } from '../../services/api';
 import { Loading } from '../../components/Loading';
 import { useAccounts } from '../../hooks/useAccounts';
+import { useDeposits } from '../../hooks/useDeposits';
+import format from 'date-fns/format';
+import { ptBR } from 'date-fns/locale';
 
 export function Deposit() {
   const { navigate } = useNavigation();
@@ -30,6 +32,7 @@ export function Deposit() {
   const { account, client } = params as IDepositDataParams;
 
   const { editAccount } = useAccounts();
+  const { newDepoist } = useDeposits();
 
   const [value, setValue] = useState<string>('');
 
@@ -61,14 +64,16 @@ export function Deposit() {
   async function handleSaveDeposit() {
     setLoaded(false);
     try {
-      await api.post(`/deposits/`, {
+      const deposit: IDepositData = {
         id: String(uuid.v4()),
-        value: unmaskmMoney(value),
+        value: unmaskmMoney(value) * 100,
         accountId: account.id,
         description: `Depósito para o ${client.name}, ${account.number} no valor de ${value}`,
-      } as IDepositData);
+        createdAt: format(new Date(), 'dd/MM/yyyy HH:mm', { locale: ptBR }),
+      };
 
-      editAccount({ ...account, balance: account.balance + unmaskmMoney(value) });
+      newDepoist(deposit);
+      editAccount({ ...account, balance: account.balance + unmaskmMoney(value) * 100 });
       setValue('');
 
       navigate('Feedback', {

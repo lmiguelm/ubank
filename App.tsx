@@ -16,6 +16,7 @@ import { Routes } from './src/routes';
 
 import { ClientProvider } from './src/contexts/ClientContext';
 import { AccountProvider } from './src/contexts/AccountContext';
+import { DepositProvider } from './src/contexts/DepositContext';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -31,7 +32,9 @@ export default function App() {
     <ThemeProvider theme={PrimaryTheme}>
       <ClientProvider>
         <AccountProvider>
-          <Routes />
+          <DepositProvider>
+            <Routes />
+          </DepositProvider>
         </AccountProvider>
       </ClientProvider>
       <StatusBar style="light" backgroundColor="#F2822C" />

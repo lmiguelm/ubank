@@ -14,6 +14,8 @@ import { IAccountData } from '../../types/IAccount';
 
 import { useAccounts } from '../../hooks/useAccounts';
 import { IClientData } from '../../types/IClient';
+import { IStatementDataParams } from '../../types/IStatement';
+import { IFeedbackProps } from '../../types/IFeedback';
 
 interface IAccountProps {
   account: IAccountData;
@@ -47,7 +49,10 @@ export function AccountCard({
   }
 
   function handleToAccountStatement() {
-    navigate('AccountStatement');
+    navigate('AccountStatement', {
+      accountId: id,
+      accountNumber: number,
+    } as IStatementDataParams);
   }
 
   async function handleRemoveAccount() {
@@ -69,6 +74,16 @@ export function AccountCard({
     setIsActive(!isActive);
   }
 
+  function cannontDepositToInactiveAccount() {
+    navigate('Feedback', {
+      buttonTitle: 'Entendi',
+      emoji: 'sad',
+      title: 'Ops!',
+      info: 'Não é possível realizar depósitos em uma conta inativa.',
+      routeName: 'Account',
+    } as IFeedbackProps);
+  }
+
   return (
     <TouchableWithoutFeedback onPress={toggleActive}>
       <Container>
@@ -88,7 +103,6 @@ export function AccountCard({
             {emojis.balance}{' '}
             {MaskService.toMask('money', String(balance), {
               maskType: 'BRL',
-              zeroCents: true,
             })}
           </TextInfo>
         </InfoContainer>
@@ -106,7 +120,11 @@ export function AccountCard({
               title="Editar"
               iconName="edit"
             />
-            <CardButton onPress={handleToDepositPage} title="Depositar" iconName="dollar-sign" />
+            <CardButton
+              onPress={status ? handleToDepositPage : cannontDepositToInactiveAccount}
+              title="Depositar"
+              iconName="dollar-sign"
+            />
             <CardButton onPress={handleToAccountStatement} title="Extrato" iconName="file" />
             <CardButton onPress={handleRemoveAccount} title="Remover" iconName="trash-2" />
           </ButtonsContainer>
