@@ -30,7 +30,6 @@ export function Account() {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(client.id);
     loadAccounts(client.id);
   }, []);
 
@@ -61,7 +60,9 @@ export function Account() {
         <List
           data={filteredAccounts}
           keyExtractor={(item: any) => String(item.id)}
-          renderItem={({ item }: any) => <AccountCard account={item} key={item.id} />}
+          renderItem={({ item }: any) => (
+            <AccountCard account={item} client={client} key={item.id} />
+          )}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl refreshing={!loadAccounts} onRefresh={() => loadAccounts(client.id)} />

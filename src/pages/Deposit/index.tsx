@@ -13,20 +13,28 @@ import { SecondHeader } from '../../components/SecondHeader';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { unmaskmMoney } from '../../utils/mask';
+import uuid from 'react-native-uuid';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { IFeedbackProps } from '../../types/IFeedback';
-import { IDepositData } from '../../types/IDeposit';
+import { IDepositData, IDepositDataParams } from '../../types/IDeposit';
+
+import { api } from '../../services/api';
+import { Loading } from '../../components/Loading';
+import { useAccounts } from '../../hooks/useAccounts';
 
 export function Deposit() {
   const { navigate } = useNavigation();
   const { params } = useRoute();
-  const { name } = params as IDepositData;
+  const { account, client } = params as IDepositDataParams;
 
-  const [balance, setBalance] = useState<string>('');
+  const { editAccount } = useAccounts();
+
+  const [value, setValue] = useState<string>('');
 
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
+  const [loaded, setLoaded] = useState<boolean>(true);
 
   useEffect(() => {
     Alert.alert(
@@ -41,27 +49,50 @@ export function Deposit() {
   }, []);
 
   useEffect(() => {
-    let value = unmaskmMoney(balance as string);
+    let result = unmaskmMoney(value);
 
-    if (value >= 10 && value <= 5000) {
+    if (result >= 10 && result <= 5000) {
       setEnabledButton(true);
     } else {
       setEnabledButton(false);
     }
-  }, [balance]);
+  }, [value]);
 
   async function handleSaveDeposit() {
-    const data: IFeedbackProps = {
-      buttonTitle: 'Continuar',
-      title: 'Opa!',
-      emoji: 'smile',
-      info: 'Depósito realizado com sucesso.',
-      routeName: 'Client',
-    };
+    setLoaded(false);
+    try {
+      await api.post(`/deposits/`, {
+        id: String(uuid.v4()),
+        value: unmaskmMoney(value),
+        accountId: account.id,
+        description: `Depósito para o ${client.name}, ${account.number} no valor de ${value}`,
+      } as IDepositData);
 
-    navigate('Feedback', data);
+      editAccount({ ...account, balance: account.balance + unmaskmMoney(value) });
+      setValue('');
 
-    setBalance('');
+      navigate('Feedback', {
+        buttonTitle: 'Continuar',
+        title: 'Opa!',
+        emoji: 'smile',
+        info: 'Depósito realizado com sucesso.',
+        routeName: 'Account',
+      } as IFeedbackProps);
+    } catch {
+      navigate('Feedback', {
+        buttonTitle: 'Tentar Novamente',
+        title: 'Ops!',
+        emoji: 'sad',
+        info: 'Não foi possível realizar o depósito.',
+        routeName: 'Deposit',
+      } as IFeedbackProps);
+    } finally {
+      setLoaded(true);
+    }
+  }
+
+  if (!loaded) {
+    return <Loading />;
   }
 
   return (
@@ -71,16 +102,16 @@ export function Deposit() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Container>
-          <SecondHeader title={`Depósito para ${name}`} />
+          <SecondHeader title={`Depósito na conta ${account.number}`} />
 
           <Form>
             <Input
-              value={balance}
+              value={value}
               options={{
                 maskType: 'BRL',
               }}
               type="money"
-              onChangeText={(balance) => setBalance(balance)}
+              onChangeText={(value) => setValue(value)}
               placeholder="Valor"
             />
 

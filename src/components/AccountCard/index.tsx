@@ -9,16 +9,19 @@ import { useNavigation } from '@react-navigation/native';
 import { emojis } from '../../utils/emojis';
 import Feather from '@expo/vector-icons/Feather';
 
-import { IDepositData } from '../../types/IDeposit';
+import { IDepositDataParams } from '../../types/IDeposit';
 import { IAccountData } from '../../types/IAccount';
 
 import { useAccounts } from '../../hooks/useAccounts';
+import { IClientData } from '../../types/IClient';
 
 interface IAccountProps {
   account: IAccountData;
+  client: IClientData;
 }
 
 export function AccountCard({
+  client,
   account: { id, clientId, status, password, balance, createdAt, number },
 }: IAccountProps) {
   const { navigate } = useNavigation();
@@ -28,8 +31,17 @@ export function AccountCard({
   const [isActive, setIsActive] = useState(false);
 
   function handleToDepositPage() {
-    const data: IDepositData = {
-      name: 'Luis Miguel',
+    const data: IDepositDataParams = {
+      account: {
+        id,
+        clientId,
+        status,
+        password,
+        balance,
+        createdAt,
+        number,
+      },
+      client,
     };
     navigate('Deposit', data);
   }
@@ -73,7 +85,11 @@ export function AccountCard({
             )}
           </TextInfo>
           <TextInfo>
-            {emojis.balance} {MaskService.toMask('money', String(balance), { maskType: 'BRL' })}
+            {emojis.balance}{' '}
+            {MaskService.toMask('money', String(balance), {
+              maskType: 'BRL',
+              zeroCents: true,
+            })}
           </TextInfo>
         </InfoContainer>
 

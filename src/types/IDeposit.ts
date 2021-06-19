@@ -1,3 +1,14 @@
+import { IAccountData } from './IAccount';
+import { IClientData } from './IClient';
+
+export interface IDepositDataParams {
+  account: IAccountData;
+  client: IClientData;
+}
+
 export interface IDepositData {
-  name: string;
+  id: string;
+  value: number;
+  description: string;
+  accountId: string;
 }
