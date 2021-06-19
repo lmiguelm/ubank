@@ -17,7 +17,7 @@ import uuid from 'react-native-uuid';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-import { IFeedbackProps } from '../../types/IFeedback';
+import { IFeedbackDataParams } from '../../types/IFeedback';
 import { IDepositData, IDepositDataParams } from '../../types/IDeposit';
 
 import { Loading } from '../../components/Loading';
@@ -69,7 +69,7 @@ export function Deposit() {
         value: unmaskmMoney(value) * 100,
         accountId: account.id,
         description: `Depósito para o ${client.name}, ${account.number} no valor de ${value}`,
-        createdAt: format(new Date(), 'dd/MM/yyyy HH:mm', { locale: ptBR }),
+        createdAt: format(new Date(), 'dd/MM/yyyy HH:mm:ss', { locale: ptBR }),
       };
 
       newDepoist(deposit);
@@ -82,7 +82,7 @@ export function Deposit() {
         emoji: 'smile',
         info: 'Depósito realizado com sucesso.',
         routeName: 'Account',
-      } as IFeedbackProps);
+      } as IFeedbackDataParams);
     } catch {
       navigate('Feedback', {
         buttonTitle: 'Tentar Novamente',
@@ -90,7 +90,7 @@ export function Deposit() {
         emoji: 'sad',
         info: 'Não foi possível realizar o depósito.',
         routeName: 'Deposit',
-      } as IFeedbackProps);
+      } as IFeedbackDataParams);
     } finally {
       setLoaded(true);
     }

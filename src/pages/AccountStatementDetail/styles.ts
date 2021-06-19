@@ -8,9 +8,8 @@ export const Container = styled.View`
 
 export const Content = styled.View`
   flex: 1;
-  justify-content: center;
   align-items: flex-start;
-  padding: 30px;
+  padding: 90px 30px;
 `;
 
 export const BalanceContainer = styled.View`

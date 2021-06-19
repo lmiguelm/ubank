@@ -15,7 +15,7 @@ import { IAccountData } from '../../types/IAccount';
 import { useAccounts } from '../../hooks/useAccounts';
 import { IClientData } from '../../types/IClient';
 import { IStatementDataParams } from '../../types/IStatement';
-import { IFeedbackProps } from '../../types/IFeedback';
+import { IFeedbackDataParams } from '../../types/IFeedback';
 
 interface IAccountProps {
   account: IAccountData;
@@ -81,7 +81,7 @@ export function AccountCard({
       title: 'Ops!',
       info: 'Não é possível realizar depósitos em uma conta inativa.',
       routeName: 'Account',
-    } as IFeedbackProps);
+    } as IFeedbackDataParams);
   }
 
   return (

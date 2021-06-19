@@ -1,6 +1,6 @@
 import { IEmoji } from '../utils/emojis';
 
-export interface IFeedbackProps {
+export interface IFeedbackDataParams {
   title: string;
   emoji: IEmoji;
   info: string;

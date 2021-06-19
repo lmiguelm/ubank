@@ -3,14 +3,14 @@ import React from 'react';
 import { View } from 'react-native';
 import { Button } from '../../components/Button';
 
-import { IFeedbackProps } from '../../types/IFeedback';
+import { IFeedbackDataParams } from '../../types/IFeedback';
 import { emojis } from '../../utils/emojis';
 
 import { Container, Content, Title, Info, Emoji } from './styles';
 
 export function Feedback() {
   const { params } = useRoute();
-  const { title, emoji, info, buttonTitle, routeName } = params as IFeedbackProps;
+  const { title, emoji, info, buttonTitle, routeName } = params as IFeedbackDataParams;
 
   const { navigate } = useNavigation();
 

@@ -10,12 +10,12 @@
   "accounts": [
     {
       "id": "c74c089e-1e2a-4eb9-b6b6-7c31295e94e6",
-      "number": "13769-4",
-      "createdAt": "19/06/2021",
-      "balance": 9200,
+      "clientId": "a19069ba-721d-445d-a5a1-c8ab8f61442d",
       "status": true,
       "password": "12345",
-      "clientId": "a19069ba-721d-445d-a5a1-c8ab8f61442d"
+      "createdAt": "19/06/2021",
+      "number": "13769-4",
+      "balance": 68021
     }
   ],
   "deposits": [
@@ -32,6 +32,13 @@
       "accountId": "c74c089e-1e2a-4eb9-b6b6-7c31295e94e6",
       "description": "Depósito para o Luis Miguel, 13769-4 no valor de R$12,00",
       "createdAt": "19/06/2021 13:09"
+    },
+    {
+      "id": "ab84e36b-9f39-43cd-a014-e4b7cafdc5ef",
+      "value": 58821,
+      "accountId": "c74c089e-1e2a-4eb9-b6b6-7c31295e94e6",
+      "description": "Depósito para o Luis Miguel, 13769-4 no valor de R$588,21",
+      "createdAt": "19/06/2021 20:17:31"
     }
   ]
 }

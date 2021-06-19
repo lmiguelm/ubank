@@ -63,7 +63,6 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
 
   useEffect(() => {
     if (password == confirmPassword && password.length >= 5 && number.length == 7) {
-      console.log('entro');
       setEnabledButton(true);
     } else {
       setEnabledButton(false);

@@ -22,7 +22,7 @@ import { ptBR } from 'date-fns/locale';
 import { unmaskCpf } from '../../utils/mask';
 import uuid from 'react-native-uuid';
 
-import { IFeedbackProps } from '../../types/IFeedback';
+import { IFeedbackDataParams } from '../../types/IFeedback';
 import { IClientData } from '../../types/IClient';
 
 import { useClients } from '../../hooks/useClients';
@@ -72,7 +72,7 @@ export function RegisterClient() {
         info: 'Cliente salvo com sucesso.',
         buttonTitle: 'Continuar',
         routeName: 'Client',
-      } as IFeedbackProps);
+      } as IFeedbackDataParams);
     } catch {
       navigate('Feedback', {
         title: 'Ops!',
@@ -80,7 +80,7 @@ export function RegisterClient() {
         info: 'Infelizmente não conseguimos salvar. Tente novamente.',
         buttonTitle: 'Entendi',
         routeName: 'Client',
-      } as IFeedbackProps);
+      } as IFeedbackDataParams);
     }
   }
 

@@ -33,7 +33,6 @@ export function AccountProvider({ children }: IAcccountProviderProps) {
     const { data } = await api.get<IAccountData[]>(`/accounts`, {
       params: { clientId, _sort: 'createdAt', _order: 'desc' },
     });
-    console.log(data);
     setAccounts(data);
     setFilteredAccounts(data);
     setLoadedAccounts(true);
