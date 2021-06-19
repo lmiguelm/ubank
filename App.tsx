@@ -1,6 +1,7 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Text } from 'react-native';
+import AppLoading from 'expo-app-loading';
 
 import { ThemeProvider } from 'styled-components';
 import { PrimaryTheme } from './src/styles/theme/primaryTheme';
@@ -26,7 +27,7 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return <Text>Carregando...</Text>;
+    return <AppLoading />;
   }
   return (
     <ThemeProvider theme={PrimaryTheme}>
