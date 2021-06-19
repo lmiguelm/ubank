@@ -23,8 +23,6 @@ import { IDepositData, IDepositDataParams } from '../../types/IDeposit';
 import { Loading } from '../../components/Loading';
 import { useAccounts } from '../../hooks/useAccounts';
 import { useDeposits } from '../../hooks/useDeposits';
-import format from 'date-fns/format';
-import { ptBR } from 'date-fns/locale';
 
 export function Deposit() {
   const { navigate } = useNavigation();
@@ -69,7 +67,7 @@ export function Deposit() {
         value: unmaskmMoney(value) * 100,
         accountId: account.id,
         description: `Depósito para o ${client.name}, ${account.number} no valor de ${value}`,
-        createdAt: format(new Date(), 'dd/MM/yyyy HH:mm:ss', { locale: ptBR }),
+        createdAt: Date.now(),
       };
 
       newDepoist(deposit);

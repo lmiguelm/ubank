@@ -6,8 +6,8 @@ import { Container, TextInfo, InfoContainer, Arrow, TextBalance } from './styles
 import { useNavigation } from '@react-navigation/native';
 import { IDepositData } from '../../types/IDeposit';
 
-import { MaskService } from 'react-native-masked-text';
 import { IAccountStatementrDetailParams } from '../../types/IAccountStatementDetail';
+import { formatMoney } from '../../utils/money';
 
 interface IAccountStatementCardProps {
   deposit: IDepositData;
@@ -25,11 +25,7 @@ export function AccountStatementCard({ deposit }: IAccountStatementCardProps) {
       <Container>
         <InfoContainer>
           <TextInfo>Depósito</TextInfo>
-          <TextBalance>
-            {MaskService.toMask('money', String(deposit.value), {
-              maskType: 'BRL',
-            })}
-          </TextBalance>
+          <TextBalance>{formatMoney(deposit.value)}</TextBalance>
 
           <TextInfo>
             <Arrow name="chevron-right" size={24} />

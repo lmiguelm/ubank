@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Alert, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { CardButton } from '../CardButton';
-import { MaskService } from 'react-native-masked-text';
 
 import { Container, TextInfo, InfoContainer, Arrow, ButtonsContainer } from './styles';
 
@@ -16,6 +15,7 @@ import { useAccounts } from '../../hooks/useAccounts';
 import { IClientData } from '../../types/IClient';
 import { IStatementDataParams } from '../../types/IStatement';
 import { IFeedbackDataParams } from '../../types/IFeedback';
+import { formatMoney } from '../../utils/money';
 
 interface IAccountProps {
   account: IAccountData;
@@ -100,10 +100,7 @@ export function AccountCard({
             )}
           </TextInfo>
           <TextInfo>
-            {emojis.balance}{' '}
-            {MaskService.toMask('money', String(balance), {
-              maskType: 'BRL',
-            })}
+            {emojis.balance} {formatMoney(balance)}
           </TextInfo>
         </InfoContainer>
 

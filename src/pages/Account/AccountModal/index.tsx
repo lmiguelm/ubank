@@ -27,10 +27,11 @@ import uuid from 'react-native-uuid';
 import { Input } from '../../../components/Input';
 import { IAccountData } from '../../../types/IAccount';
 import { useAccounts } from '../../../hooks/useAccounts';
-import { format, parse } from 'date-fns';
+import { format, toDate } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 import Picker, { Event } from '@react-native-community/datetimepicker';
+import { formatDate } from '../../../utils/date';
 
 interface IAccountModalProps extends ModalProps {
   account?: IAccountData;
@@ -55,7 +56,7 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
   useEffect(() => {
     if (account && !!Object.values(account).length) {
       setNumber(account.number);
-      setCreatedAt(parse(account.createdAt, 'dd/MM/yyyy', new Date()));
+      setCreatedAt(toDate(account.createdAt));
       setStatus(account.status);
       setPassword(account.password);
     }
@@ -78,7 +79,7 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
 
     const data: IAccountData = {
       id: String(uuid.v4()),
-      createdAt: format(Number(createdAt), 'dd/MM/yyy', { locale: ptBR }),
+      createdAt: createdAt?.getTime() || Date.now(),
       status: true,
       number,
       password,
@@ -101,7 +102,7 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
     const data: IAccountData = {
       id: account?.id ?? '',
       number: account?.number ?? '',
-      createdAt: String(account?.createdAt),
+      createdAt: account?.createdAt ?? Date.now(),
       balance: account?.balance ?? 0,
       status,
       password,
@@ -165,9 +166,7 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
                 <DatePickerContainer>
                   <Feather name="calendar" size={24} color="#454545" style={{ marginRight: 10 }} />
 
-                  {createdAt && (
-                    <Placeholder>{format(createdAt, 'dd/MM/yyyy', { locale: ptBR })}</Placeholder>
-                  )}
+                  {createdAt && <Placeholder>{formatDate(createdAt.getTime())}</Placeholder>}
                 </DatePickerContainer>
               ) : (
                 <TouchableOpacity activeOpacity={0.5} onPress={toggleDatePicker}>

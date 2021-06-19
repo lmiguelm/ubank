@@ -9,6 +9,8 @@ import { useNavigation } from '@react-navigation/native';
 
 import { Loading } from '../../components/Loading';
 import { useClients } from '../../hooks/useClients';
+import { IRegisterClientsDataParams } from '../../types/IRegisterClients';
+import { IClientData } from '../../types/IClient';
 
 export function Client() {
   const { navigate } = useNavigation();
@@ -16,7 +18,10 @@ export function Client() {
   const { filteredClients, loadedClients, loadClients, filterClients, refreshFilteredClients } =
     useClients();
 
-  const onNewClient = useCallback(() => navigate('RegisterClient'), []);
+  const onNewClient = useCallback(() => {
+    const client: IClientData = {} as IClientData;
+    navigate('RegisterClient', { client } as IRegisterClientsDataParams);
+  }, []);
 
   if (!loadedClients) {
     return <Loading />;

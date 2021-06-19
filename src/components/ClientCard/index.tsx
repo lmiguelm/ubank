@@ -10,6 +10,8 @@ import { IClientData } from '../../types/IClient';
 import { MaskService } from 'react-native-masked-text';
 import { useClients } from '../../hooks/useClients';
 import { IAccountDataParams } from '../../types/IAccount';
+import { formatDate } from '../../utils/date';
+import { IRegisterClientsDataParams } from '../../types/IRegisterClients';
 
 interface IClientCardProps {
   client: IClientData;
@@ -18,7 +20,7 @@ interface IClientCardProps {
 export function ClientCard({ client: { id, name, cpf, birthDate } }: IClientCardProps) {
   const { navigate } = useNavigation();
 
-  const { removeClient } = useClients();
+  const { removeClient, editClient } = useClients();
 
   const [isActive, setIsActive] = useState(false);
 
@@ -40,6 +42,11 @@ export function ClientCard({ client: { id, name, cpf, birthDate } }: IClientCard
     ]);
   }
 
+  async function handleEditClient() {
+    const client = { id, name, cpf, birthDate };
+    navigate('RegisterClient', { client } as IRegisterClientsDataParams);
+  }
+
   function toggleActive() {
     setIsActive(!isActive);
   }
@@ -50,7 +57,7 @@ export function ClientCard({ client: { id, name, cpf, birthDate } }: IClientCard
         <InfoContainer>
           <TextInfo>😀 {name}</TextInfo>
           <TextInfo>📄 {MaskService.toMask('cpf', String(cpf))}</TextInfo>
-          <TextInfo>🎂 {birthDate}</TextInfo>
+          <TextInfo>🎂 {formatDate(birthDate)}</TextInfo>
         </InfoContainer>
 
         <TouchableOpacity onPress={toggleActive} activeOpacity={0.8}>
@@ -61,6 +68,7 @@ export function ClientCard({ client: { id, name, cpf, birthDate } }: IClientCard
           <ButtonsContainer>
             <CardButton onPress={handleToAccountPage} title="Contas" iconName="credit-card" />
             <CardButton onPress={handleRemoveClient} title="Remover" iconName="trash-2" />
+            <CardButton onPress={handleEditClient} title="Editar" iconName="edit" />
           </ButtonsContainer>
         )}
       </Container>

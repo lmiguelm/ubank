@@ -11,5 +11,5 @@ export interface IDepositData {
   value: number;
   description: string;
   accountId: string;
-  createdAt: string;
+  createdAt: number;
 }

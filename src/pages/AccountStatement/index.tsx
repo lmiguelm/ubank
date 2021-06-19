@@ -1,36 +1,29 @@
-import React, { useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { Container, List } from './styles';
 
 import { PrimaryHeader } from '../../components/PrimaryHeader';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { IClientData } from '../../types/IClient';
+import { useRoute } from '@react-navigation/native';
 import { AccountStatementCard } from '../../components/AccountStatementCard';
 import { IStatementDataParams } from '../../types/IStatement';
-import { useEffect } from 'react';
 import { useDeposits } from '../../hooks/useDeposits';
 import { Loading } from '../../components/Loading';
 import { RefreshControl } from 'react-native';
 
 export function AccountStatement() {
-  const { navigate } = useNavigation();
   const { params } = useRoute();
   const { accountId, accountNumber } = params as IStatementDataParams;
 
-  const { loadDeposits, loadedDeposits, filteredDeposits } = useDeposits();
+  const {
+    loadDeposits,
+    loadedDeposits,
+    filteredDeposits,
+    filterDepositts,
+    refreshFilteredDeposits,
+  } = useDeposits();
 
   useEffect(() => {
     loadDeposits(accountId);
   }, []);
-
-  const onNewUser = useCallback(() => {
-    navigate('RegisterClient', {} as IClientData);
-  }, []);
-
-  const onFilterUsers = useCallback((callback: string) => {
-    console.log(callback);
-  }, []);
-
-  const onRefreshUsers = useCallback(() => {}, []);
 
   if (!loadedDeposits) {
     return <Loading />;
@@ -41,9 +34,8 @@ export function AccountStatement() {
       <PrimaryHeader
         title="Extrato"
         subtitle={`Conta nº ${accountNumber}`}
-        onNew={onNewUser}
-        onFilter={onFilterUsers}
-        onRefresh={onRefreshUsers}
+        onFilter={filterDepositts}
+        onRefresh={refreshFilteredDeposits}
       />
 
       <List

@@ -4,7 +4,7 @@ export interface IAccountData {
   id: string;
   number: string;
   balance: number;
-  createdAt: string;
+  createdAt: number;
   status: boolean;
   password: string;
   clientId: string;

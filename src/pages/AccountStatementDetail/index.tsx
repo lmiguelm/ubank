@@ -14,9 +14,8 @@ import {
 import { SecondHeader } from '../../components/SecondHeader';
 import { useRoute } from '@react-navigation/native';
 import { IAccountStatementrDetailParams } from '../../types/IAccountStatementDetail';
-import { MaskService } from 'react-native-masked-text';
-import format from 'date-fns/format';
-import ptBR from 'date-fns/esm/locale/pt-BR/index.js';
+import { formatDateWithHours } from '../../utils/date';
+import { formatMoneyWhitoutR$ } from '../../utils/money';
 
 export function AccountStatementDetail() {
   const { params } = useRoute();
@@ -31,12 +30,7 @@ export function AccountStatementDetail() {
       <Content>
         <BalanceContainer>
           <BalanceTitle>R$</BalanceTitle>
-          <BalanceText>
-            {MaskService.toMask('money', String(value), {
-              maskType: 'BRL',
-              unit: '',
-            })}
-          </BalanceText>
+          <BalanceText>{formatMoneyWhitoutR$(value)}</BalanceText>
         </BalanceContainer>
 
         <InfoContainer>
@@ -46,7 +40,7 @@ export function AccountStatementDetail() {
 
         <InfoContainer>
           <Title>Data</Title>
-          <Info>{createdAt}</Info>
+          <Info>{formatDateWithHours(createdAt)}</Info>
         </InfoContainer>
       </Content>
     </Container>

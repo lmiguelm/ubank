@@ -1,6 +1,6 @@
 export type IClientData = {
   id: string;
   cpf: number;
-  birthDate: string | undefined;
+  birthDate: number;
   name: string;
 };

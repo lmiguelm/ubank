@@ -11,6 +11,7 @@ interface ClientContextData {
   removeClient: (clientId: string) => void;
   filterClients: (filter: string) => void;
   newClient: (client: IClientData) => void;
+  editClient: (client: IClientData) => void;
 }
 
 interface ClientProvideProps {
@@ -68,6 +69,28 @@ export function ClientProvider({ children }: ClientProvideProps) {
     }
   }
 
+  async function editClient(client: IClientData) {
+    setLoadedClients(false);
+
+    try {
+      await api.put(`/clients/${client.id}`, client);
+
+      const newArrayClients = clients.map((c) => {
+        if (c.id === client.id) {
+          return client;
+        }
+        return c;
+      });
+
+      setClients(newArrayClients);
+      setFilteredClients(newArrayClients);
+    } catch {
+      throw new Error('Não foi possível editar este cliente');
+    } finally {
+      setLoadedClients(true);
+    }
+  }
+
   function filterClients(filter: string) {
     setFilteredClients(
       clients.filter((client) => {
@@ -93,6 +116,7 @@ export function ClientProvider({ children }: ClientProvideProps) {
         filterClients,
         refreshFilteredClients,
         newClient,
+        editClient,
       }}
     >
       {children}

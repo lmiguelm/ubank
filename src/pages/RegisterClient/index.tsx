@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import Feather from '@expo/vector-icons/Feather';
 import { Container, DatePickerContainer, Form, Placeholder } from './styles';
@@ -17,7 +17,7 @@ import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import Picker, { Event } from '@react-native-community/datetimepicker';
 
-import { format } from 'date-fns';
+import { format, toDate } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { unmaskCpf } from '../../utils/mask';
 import uuid from 'react-native-uuid';
@@ -26,11 +26,14 @@ import { IFeedbackDataParams } from '../../types/IFeedback';
 import { IClientData } from '../../types/IClient';
 
 import { useClients } from '../../hooks/useClients';
+import { IRegisterClientsDataParams } from '../../types/IRegisterClients';
 
 export function RegisterClient() {
   const { navigate } = useNavigation();
+  const { params } = useRoute();
+  const { client } = params as IRegisterClientsDataParams;
 
-  const { newClient } = useClients();
+  const { newClient, editClient } = useClients();
 
   const [cpf, setCpf] = useState<string>('');
   const [name, setName] = useState<string>('');
@@ -38,6 +41,14 @@ export function RegisterClient() {
 
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (client && !!Object.values(client).length) {
+      setCpf(String(client.cpf));
+      setName(client?.name);
+      setBithDate(toDate(client.birthDate));
+    }
+  }, []);
 
   useEffect(() => {
     if (name?.length !== 0 && String(unmaskCpf(String(cpf))).length === 11 && birthDate) {
@@ -57,15 +68,15 @@ export function RegisterClient() {
   }
 
   async function handleSaveNewClient() {
-    const userData: IClientData = {
+    const clientData: IClientData = {
       id: String(uuid.v4()),
       cpf: unmaskCpf(cpf),
       name,
-      birthDate: format(Number(birthDate), 'dd/MM/yyyy', { locale: ptBR }),
+      birthDate: birthDate?.getTime() || Date.now(),
     };
 
     try {
-      newClient(userData);
+      newClient(clientData);
       navigate('Feedback', {
         title: 'Opa!',
         emoji: 'wink',
@@ -82,6 +93,17 @@ export function RegisterClient() {
         routeName: 'Client',
       } as IFeedbackDataParams);
     }
+  }
+
+  function handleEditClient() {
+    const clientData: IClientData = {
+      id: client.id,
+      cpf: unmaskCpf(cpf),
+      name,
+      birthDate: birthDate?.getTime() || client.birthDate,
+    };
+    editClient(clientData);
+    navigate('Client');
   }
 
   return (
@@ -119,7 +141,7 @@ export function RegisterClient() {
               </TouchableOpacity>
 
               <Button
-                onPress={handleSaveNewClient}
+                onPress={client.id ? handleEditClient : handleSaveNewClient}
                 title="Salvar"
                 enabled={enabledButton}
                 style={enabledButton ? { marginTop: 20 } : { marginTop: 20, opacity: 0.5 }}
