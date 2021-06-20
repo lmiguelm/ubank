@@ -1,6 +1,6 @@
 # 💸 Ubank
 
-![lmiguelm](.github/capa.svg)
+![ubank](.github/capa.png)
 
 ## 🚨 IMPORTANTE 🚨
 
