@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -8,30 +8,37 @@ import {
 } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
-
 import Feather from '@expo/vector-icons/Feather';
+import Picker, { Event } from '@react-native-community/datetimepicker';
+import uuid from 'react-native-uuid';
+import { TextMaskInstance } from 'react-native-masked-text';
+
+import { format, toDate } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
 import { Container, DatePickerContainer, Form, Placeholder } from './styles';
 
 import { SecondHeader } from '../../components/SecondHeader';
 import { Input } from '../../components/Input';
+import { InputMask } from '../../components/Input/Mask';
 import { Button } from '../../components/Button';
-import Picker, { Event } from '@react-native-community/datetimepicker';
 
-import { format, toDate } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { unmaskCpf } from '../../utils/mask';
-import uuid from 'react-native-uuid';
+import { unmaskCpf } from '../../utils/cpf';
+import { useClients } from '../../hooks/useClients';
+import { TextInput } from 'react-native';
+import { delay } from '../../utils/delay';
 
 import { IFeedbackDataParams } from '../../types/IFeedback';
 import { IClientData } from '../../types/IClient';
-
-import { useClients } from '../../hooks/useClients';
 import { IRegisterClientsDataParams } from '../../types/IRegisterClients';
 
 export function RegisterClient() {
   const { navigate } = useNavigation();
   const { params } = useRoute();
   const { client } = params as IRegisterClientsDataParams;
+
+  const cpfInputRef = useRef<TextMaskInstance>(null);
+  const nameInputRef = useRef<TextInput>(null);
 
   const { newClient, editClient } = useClients();
 
@@ -41,6 +48,12 @@ export function RegisterClient() {
 
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
+
+  useEffect(() => {
+    delay().then(() => {
+      cpfInputRef.current?.getElement().focus();
+    });
+  }, []);
 
   useEffect(() => {
     if (client && !!Object.values(client).length) {
@@ -76,7 +89,7 @@ export function RegisterClient() {
     };
 
     try {
-      newClient(clientData);
+      await newClient(clientData);
       navigate('Feedback', {
         title: 'Opa!',
         emoji: 'wink',
@@ -84,26 +97,43 @@ export function RegisterClient() {
         buttonTitle: 'Continuar',
         routeName: 'Client',
       } as IFeedbackDataParams);
-    } catch {
+    } catch (error) {
       navigate('Feedback', {
         title: 'Ops!',
         emoji: 'sad',
-        info: 'Infelizmente não conseguimos salvar. Tente novamente.',
+        info: error.message,
         buttonTitle: 'Entendi',
         routeName: 'Client',
       } as IFeedbackDataParams);
     }
   }
 
-  function handleEditClient() {
+  async function handleEditClient() {
     const clientData: IClientData = {
       id: client.id,
       cpf: unmaskCpf(cpf),
       name,
       birthDate: birthDate?.getTime() || client.birthDate,
     };
-    editClient(clientData);
-    navigate('Client');
+
+    try {
+      await editClient(clientData);
+      navigate('Feedback', {
+        title: 'Opa!',
+        emoji: 'wink',
+        info: `${clientData.name} editado com sucesso.`,
+        buttonTitle: 'Continuar',
+        routeName: 'Client',
+      } as IFeedbackDataParams);
+    } catch (error) {
+      navigate('Feedback', {
+        title: 'Ops!',
+        emoji: 'sad',
+        info: error.message,
+        buttonTitle: 'Continuar',
+        routeName: 'Client',
+      } as IFeedbackDataParams);
+    }
   }
 
   return (
@@ -117,13 +147,22 @@ export function RegisterClient() {
             <SecondHeader title="Novo Cliente" />
 
             <Form>
-              <Input value={cpf} onChangeText={(cpf) => setCpf(cpf)} placeholder="CPF" type="cpf" />
-
+              <InputMask
+                type="cpf"
+                placeholder="CPF"
+                ref={cpfInputRef}
+                value={cpf}
+                onChangeText={(cpf) => setCpf(cpf)}
+                onSubmitEditing={() => nameInputRef.current?.focus()}
+              />
               <Input
+                placeholder="Nome"
+                autoCompleteType="name"
+                ref={nameInputRef}
                 value={name}
                 onChangeText={(name) => setName(name)}
-                placeholder="Nome"
                 maxLength={100}
+                onSubmitEditing={toggleDatePicker}
               />
 
               <TouchableOpacity onPress={toggleDatePicker}>

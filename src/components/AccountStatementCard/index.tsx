@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableWithoutFeedback } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 import { Container, TextInfo, InfoContainer, Arrow, TextBalance } from './styles';
 
@@ -21,17 +21,15 @@ export function AccountStatementCard({ deposit }: IAccountStatementCardProps) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={handleToAccountStatementDetail}>
-      <Container>
-        <InfoContainer>
-          <TextInfo>Depósito</TextInfo>
-          <TextBalance>{formatMoney(deposit.value)}</TextBalance>
+    <Container>
+      <InfoContainer>
+        <TextInfo>Depósito</TextInfo>
+        <TextBalance>{formatMoney(deposit.value)}</TextBalance>
 
-          <TextInfo>
-            <Arrow name="chevron-right" size={24} />
-          </TextInfo>
-        </InfoContainer>
-      </Container>
-    </TouchableWithoutFeedback>
+        <TouchableOpacity onPress={handleToAccountStatementDetail}>
+          <Arrow name="chevron-right" size={24} />
+        </TouchableOpacity>
+      </InfoContainer>
+    </Container>
   );
 }

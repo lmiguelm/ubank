@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -7,35 +7,42 @@ import {
   Alert,
 } from 'react-native';
 
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { TextMaskInstance } from 'react-native-masked-text';
+import uuid from 'react-native-uuid';
+
 import { Container, Form } from './styles';
 
 import { SecondHeader } from '../../components/SecondHeader';
-import { Input } from '../../components/Input';
+import { InputMask } from '../../components/Input/Mask';
 import { Button } from '../../components/Button';
-import { unmaskmMoney } from '../../utils/mask';
-import uuid from 'react-native-uuid';
+import { Loading } from '../../components/Loading';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { unmaskmMoney } from '../../utils/money';
+import { useDeposits } from '../../hooks/useDeposits';
+import { delay } from '../../utils/delay';
 
 import { IFeedbackDataParams } from '../../types/IFeedback';
 import { IDepositData, IDepositDataParams } from '../../types/IDeposit';
-
-import { Loading } from '../../components/Loading';
-import { useAccounts } from '../../hooks/useAccounts';
-import { useDeposits } from '../../hooks/useDeposits';
 
 export function Deposit() {
   const { navigate } = useNavigation();
   const { params } = useRoute();
   const { account, client } = params as IDepositDataParams;
 
-  const { editAccount } = useAccounts();
-  const { newDepoist } = useDeposits();
+  const { newDepoist, loadedDeposits } = useDeposits();
+
+  let inputRef = useRef<TextMaskInstance>(null);
 
   const [value, setValue] = useState<string>('');
 
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
-  const [loaded, setLoaded] = useState<boolean>(true);
+
+  useEffect(() => {
+    delay().then(() => {
+      console.log(inputRef?.current?.getElement().focus());
+    });
+  }, []);
 
   useEffect(() => {
     Alert.alert(
@@ -60,7 +67,8 @@ export function Deposit() {
   }, [value]);
 
   async function handleSaveDeposit() {
-    setLoaded(false);
+    setValue('');
+
     try {
       const deposit: IDepositData = {
         id: String(uuid.v4()),
@@ -70,9 +78,7 @@ export function Deposit() {
         createdAt: Date.now(),
       };
 
-      newDepoist(deposit);
-      editAccount({ ...account, balance: account.balance + unmaskmMoney(value) * 100 });
-      setValue('');
+      await newDepoist(deposit, account);
 
       navigate('Feedback', {
         buttonTitle: 'Continuar',
@@ -81,20 +87,18 @@ export function Deposit() {
         info: 'Depósito realizado com sucesso.',
         routeName: 'Account',
       } as IFeedbackDataParams);
-    } catch {
+    } catch (error) {
       navigate('Feedback', {
         buttonTitle: 'Tentar Novamente',
         title: 'Ops!',
         emoji: 'sad',
-        info: 'Não foi possível realizar o depósito.',
+        info: error.message,
         routeName: 'Deposit',
       } as IFeedbackDataParams);
-    } finally {
-      setLoaded(true);
     }
   }
 
-  if (!loaded) {
+  if (!loadedDeposits) {
     return <Loading />;
   }
 
@@ -108,7 +112,8 @@ export function Deposit() {
           <SecondHeader title={`Depósito na conta ${account.number}`} />
 
           <Form>
-            <Input
+            <InputMask
+              ref={inputRef}
               value={value}
               options={{
                 maskType: 'BRL',
@@ -116,6 +121,7 @@ export function Deposit() {
               type="money"
               onChangeText={(value) => setValue(value)}
               placeholder="Valor"
+              onSubmitEditing={handleSaveDeposit}
             />
 
             <Button

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
 import {
   ModalProps,
   Modal,
@@ -6,10 +7,17 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
+
 import Feather from '@expo/vector-icons/Feather';
+import Picker, { Event } from '@react-native-community/datetimepicker';
+import { TextMaskInstance } from 'react-native-masked-text';
+import { useNavigation } from '@react-navigation/native';
+
+import { format, toDate } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 import {
   Container,
@@ -25,13 +33,14 @@ import {
 import uuid from 'react-native-uuid';
 
 import { Input } from '../../../components/Input';
-import { IAccountData } from '../../../types/IAccount';
-import { useAccounts } from '../../../hooks/useAccounts';
-import { format, toDate } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { InputMask } from '../../../components/Input/Mask';
 
-import Picker, { Event } from '@react-native-community/datetimepicker';
+import { useAccounts } from '../../../hooks/useAccounts';
 import { formatDate } from '../../../utils/date';
+import { delay } from '../../../utils/delay';
+
+import { IAccountData } from '../../../types/IAccount';
+import { IFeedbackDataParams } from '../../../types/IFeedback';
 
 interface IAccountModalProps extends ModalProps {
   account?: IAccountData;
@@ -39,10 +48,22 @@ interface IAccountModalProps extends ModalProps {
   handleCloseModal: () => void;
 }
 
-export function AccountModal({ clientId, account, handleCloseModal, ...rest }: IAccountModalProps) {
+export function AccountModal({
+  visible,
+  clientId,
+  account,
+  handleCloseModal,
+  ...rest
+}: IAccountModalProps) {
   const existsIdAccount = !!account?.id;
 
+  const { navigate } = useNavigation();
+
   const { newAccount, editAccount } = useAccounts();
+
+  const numberRef = useRef<TextMaskInstance>(null);
+  const passwordRef = useRef<TextInput>(null);
+  const confirmPasswordRef = useRef<TextInput>(null);
 
   const [number, setNumber] = useState<string>('');
   const [createdAt, setCreatedAt] = useState<Date | undefined>();
@@ -52,6 +73,10 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
 
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+
+  useEffect(() => {
+    delay(500).then(() => numberRef.current?.getElement().focus());
+  }, [visible]);
 
   useEffect(() => {
     if (account && !!Object.values(account).length) {
@@ -74,7 +99,7 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
     setStatus((oldvalue) => !oldvalue);
   }
 
-  function handleNewAccount() {
+  async function handleNewAccount() {
     Keyboard.dismiss();
 
     const data: IAccountData = {
@@ -88,15 +113,27 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
     };
 
     try {
-      newAccount(data);
-      clear();
-      handleCloseModal();
+      await newAccount(data);
+
+      navigate('Feedback', {
+        emoji: 'wink',
+        title: 'Opa!',
+        info: 'Conta cadastrada com sucesso.',
+        buttonTitle: 'Continuar',
+        routeName: 'Account',
+      } as IFeedbackDataParams);
     } catch (error) {
-      Alert.alert(error.data.message);
+      navigate('Feedback', {
+        emoji: 'sad',
+        title: 'Ops!',
+        info: error.message,
+        buttonTitle: 'Entendi',
+        routeName: 'Account',
+      } as IFeedbackDataParams);
     }
   }
 
-  function handleEditAccount() {
+  async function handleEditAccount() {
     Keyboard.dismiss();
 
     const data: IAccountData = {
@@ -110,11 +147,23 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
     };
 
     try {
-      editAccount(data);
-      clear();
-      handleCloseModal();
+      await editAccount(data);
+
+      navigate('Feedback', {
+        emoji: 'wink',
+        title: 'Opa!',
+        info: 'Conta editada com sucesso.',
+        buttonTitle: 'Continuar',
+        routeName: 'Account',
+      } as IFeedbackDataParams);
     } catch (error) {
-      Alert.alert(error.data.message);
+      navigate('Feedback', {
+        emoji: 'sad',
+        title: 'Ops!',
+        info: error.message,
+        buttonTitle: 'Continuar',
+        routeName: 'Account',
+      } as IFeedbackDataParams);
     }
   }
 
@@ -125,6 +174,7 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
   function handleChangePicker(_: Event, dateTime: Date | undefined) {
     setShowDatePicker(false);
     setCreatedAt(dateTime ? dateTime : new Date());
+    passwordRef.current?.focus();
   }
 
   function closeModal() {
@@ -144,13 +194,14 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
     <>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <Modal {...rest}>
+          <Modal {...rest} visible={visible}>
             <Container>
               <IconContainer onPress={closeModal}>
                 <Feather name="x" color="red" size={24} />
               </IconContainer>
 
-              <Input
+              <InputMask
+                ref={numberRef}
                 value={number}
                 onChangeText={(number) => setNumber(number)}
                 keyboardType="number-pad"
@@ -160,6 +211,7 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
                 }}
                 placeholder="Número da conta"
                 editable={!existsIdAccount}
+                onEndEditing={toggleDatePicker}
               />
 
               {existsIdAccount ? (
@@ -188,14 +240,17 @@ export function AccountModal({ clientId, account, handleCloseModal, ...rest }: I
               )}
 
               <Input
+                ref={passwordRef}
                 value={password}
                 autoCorrect={false}
                 secureTextEntry={true}
                 onChangeText={(password) => setPassword(password)}
                 placeholder="Senha"
+                onSubmitEditing={() => confirmPasswordRef.current?.focus()}
               />
 
               <Input
+                ref={confirmPasswordRef}
                 value={confirmPassword}
                 autoCorrect={false}
                 secureTextEntry={true}

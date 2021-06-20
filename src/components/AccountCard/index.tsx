@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { Alert, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-import { CardButton } from '../CardButton';
+import { Alert, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import Feather from '@expo/vector-icons/Feather';
 
 import { Container, TextInfo, InfoContainer, Arrow, ButtonsContainer } from './styles';
 
-import { useNavigation } from '@react-navigation/native';
+import { CardButton } from '../CardButton';
+
 import { emojis } from '../../utils/emojis';
-import Feather from '@expo/vector-icons/Feather';
+import { useAccounts } from '../../hooks/useAccounts';
+import { formatMoney } from '../../utils/money';
 
 import { IDepositDataParams } from '../../types/IDeposit';
 import { IAccountData } from '../../types/IAccount';
-
-import { useAccounts } from '../../hooks/useAccounts';
 import { IClientData } from '../../types/IClient';
 import { IStatementDataParams } from '../../types/IStatement';
 import { IFeedbackDataParams } from '../../types/IFeedback';
-import { formatMoney } from '../../utils/money';
 
 interface IAccountProps {
   account: IAccountData;
@@ -64,7 +64,24 @@ export function AccountCard({
       {
         text: 'Sim',
         onPress: async () => {
-          removeAccount(id);
+          try {
+            await removeAccount(id);
+            navigate('Feedback', {
+              emoji: 'wink',
+              title: 'Sucesso!',
+              info: 'Conta removida com sucesso.',
+              buttonTitle: 'Continuar',
+              routeName: 'Account',
+            } as IFeedbackDataParams);
+          } catch (error) {
+            navigate('Feedback', {
+              emoji: 'sad',
+              title: 'Erro!',
+              info: error.message,
+              buttonTitle: 'Entendi',
+              routeName: 'Account',
+            } as IFeedbackDataParams);
+          }
         },
       },
     ]);
@@ -85,48 +102,46 @@ export function AccountCard({
   }
 
   return (
-    <TouchableWithoutFeedback onPress={toggleActive}>
-      <Container>
-        <InfoContainer>
-          <TextInfo>
-            {status ? (
-              <>
-                <Feather name="circle" color="green" size={24} /> {number}
-              </>
-            ) : (
-              <>
-                <Feather name="minus-circle" color="red" size={24} /> {number}
-              </>
-            )}
-          </TextInfo>
-          <TextInfo>
-            {emojis.balance} {formatMoney(balance)}
-          </TextInfo>
-        </InfoContainer>
+    <Container>
+      <InfoContainer>
+        <TextInfo>
+          {status ? (
+            <>
+              <Feather name="circle" color="green" size={24} /> {number}
+            </>
+          ) : (
+            <>
+              <Feather name="minus-circle" color="red" size={24} /> {number}
+            </>
+          )}
+        </TextInfo>
+        <TextInfo>
+          {emojis.balance} {formatMoney(balance)}
+        </TextInfo>
+      </InfoContainer>
 
-        <TouchableOpacity onPress={toggleActive} activeOpacity={0.8}>
-          {!isActive ? <Arrow name="chevron-down" /> : <Arrow name="chevron-up" />}
-        </TouchableOpacity>
+      <TouchableOpacity onPress={toggleActive}>
+        {!isActive ? <Arrow name="chevron-down" /> : <Arrow name="chevron-up" />}
+      </TouchableOpacity>
 
-        {isActive && (
-          <ButtonsContainer>
-            <CardButton
-              onPress={() =>
-                setSelectedAccount({ id, clientId, status, password, balance, createdAt, number })
-              }
-              title="Editar"
-              iconName="edit"
-            />
-            <CardButton
-              onPress={status ? handleToDepositPage : cannontDepositToInactiveAccount}
-              title="Depositar"
-              iconName="dollar-sign"
-            />
-            <CardButton onPress={handleToAccountStatement} title="Extrato" iconName="file" />
-            <CardButton onPress={handleRemoveAccount} title="Remover" iconName="trash-2" />
-          </ButtonsContainer>
-        )}
-      </Container>
-    </TouchableWithoutFeedback>
+      {isActive && (
+        <ButtonsContainer>
+          <CardButton
+            onPress={() =>
+              setSelectedAccount({ id, clientId, status, password, balance, createdAt, number })
+            }
+            title="Editar"
+            iconName="edit"
+          />
+          <CardButton
+            onPress={status ? handleToDepositPage : cannontDepositToInactiveAccount}
+            title="Depositar"
+            iconName="dollar-sign"
+          />
+          <CardButton onPress={handleToAccountStatement} title="Extrato" iconName="file" />
+          <CardButton onPress={handleRemoveAccount} title="Remover" iconName="trash-2" />
+        </ButtonsContainer>
+      )}
+    </Container>
   );
 }

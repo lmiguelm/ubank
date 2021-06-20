@@ -8,10 +8,10 @@ interface IAccountContext {
   loadedAccounts: boolean;
   selectedAccount: IAccountData;
   setSelectedAccount: (account: IAccountData) => void;
-  loadAccounts: (clientId: string) => void;
-  newAccount: (account: IAccountData) => void;
-  editAccount: (account: IAccountData) => void;
-  removeAccount: (accountId: string) => void;
+  loadAccounts: (clientId: string) => Promise<void>;
+  newAccount: (account: IAccountData) => Promise<void>;
+  editAccount: (account: IAccountData) => Promise<void>;
+  removeAccount: (accountId: string) => Promise<void>;
   filterAccounts: (filter: string) => void;
   refreshFilteredAccounts: () => void;
 }

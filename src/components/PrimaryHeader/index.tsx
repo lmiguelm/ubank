@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, Keyboard, TouchableWithoutFeedback, View } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { ScrollView, Keyboard, View, TextInput } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import Picker, { Event } from '@react-native-community/datetimepicker';
-
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
+import { useNavigation } from '@react-navigation/native';
+import { TextMaskInstance } from 'react-native-masked-text';
 
 import { Header, Subtitle, TextButton, Title, Button, ButtonContainer, Icon } from './styles';
 
 import { Input } from '../../components/Input';
+import { InputMask } from '../../components/Input/Mask';
 import { Button as ComponentButton } from '../../components/Button';
-import { useNavigation } from '@react-navigation/native';
+
+import { delay } from '../../utils/delay';
 
 interface IHeadeProps {
   title: 'Clientes' | 'Contas' | 'Extrato';
@@ -20,13 +23,16 @@ interface IHeadeProps {
 }
 
 export function PrimaryHeader({ title, subtitle, onNew, onFilter, onRefresh }: IHeadeProps) {
+  const { goBack } = useNavigation();
+
+  const inputRef = useRef<TextInput>(null);
+  const inputRefMask = useRef<TextMaskInstance>(null);
+
   const [activeFilter, setActiveFilter] = useState<boolean>(false);
   const [filterValue, setFilterValue] = useState<string>('');
   const [enabledButton, setEnabledButton] = useState<boolean>(false);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [date, setDate] = useState<Date | undefined>();
-
-  const { goBack } = useNavigation();
 
   useEffect(() => {
     if (filterValue?.length !== 0) {
@@ -38,6 +44,10 @@ export function PrimaryHeader({ title, subtitle, onNew, onFilter, onRefresh }: I
 
   function toggleFilter() {
     setActiveFilter((oldstate) => !oldstate);
+    delay().then(() => {
+      inputRef.current?.focus();
+      inputRefMask.current?.getElement().focus();
+    });
   }
 
   function handleFilter() {
@@ -61,24 +71,22 @@ export function PrimaryHeader({ title, subtitle, onNew, onFilter, onRefresh }: I
   return (
     <>
       <Header style={{ marginTop: getStatusBarHeight() }}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              {title !== 'Clientes' && (
-                <ButtonContainer onPress={goBack}>
-                  <Icon name="arrow-left" />
-                </ButtonContainer>
-              )}
-              <Title>{title}</Title>
-            </View>
-            <Subtitle>{subtitle}</Subtitle>
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            {title !== 'Clientes' && (
+              <ButtonContainer onPress={goBack}>
+                <Icon name="arrow-left" />
+              </ButtonContainer>
+            )}
+            <Title>{title}</Title>
           </View>
-        </TouchableWithoutFeedback>
+          <Subtitle>{subtitle}</Subtitle>
+        </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {title !== 'Extrato' && (
@@ -107,7 +115,8 @@ export function PrimaryHeader({ title, subtitle, onNew, onFilter, onRefresh }: I
         {activeFilter && (
           <>
             {title === 'Contas' ? (
-              <Input
+              <InputMask
+                ref={inputRefMask}
                 value={filterValue}
                 type="custom"
                 options={{
@@ -117,13 +126,16 @@ export function PrimaryHeader({ title, subtitle, onNew, onFilter, onRefresh }: I
                 placeholder="Número da conta"
                 keyboardType="numeric"
                 style={{ marginVertical: 10, alignSelf: 'center', fontSize: 18, width: '100%' }}
+                onSubmitEditing={handleFilter}
               />
             ) : (
               <Input
+                ref={inputRef}
                 value={filterValue}
                 onChangeText={(value) => setFilterValue(value)}
                 placeholder="Nome"
                 style={{ marginVertical: 10, alignSelf: 'center', fontSize: 18, width: '100%' }}
+                onSubmitEditing={handleFilter}
               />
             )}
             <ComponentButton

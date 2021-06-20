@@ -1,17 +1,19 @@
 import React, { useCallback, useState } from 'react';
-import { Alert, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
-import { CardButton } from '../CardButton';
+import { Alert, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { MaskService } from 'react-native-masked-text';
 
 import { Container, TextInfo, InfoContainer, Arrow, ButtonsContainer } from './styles';
 
-import { useNavigation } from '@react-navigation/native';
-import { IClientData } from '../../types/IClient';
+import { CardButton } from '../CardButton';
 
-import { MaskService } from 'react-native-masked-text';
-import { useClients } from '../../hooks/useClients';
-import { IAccountDataParams } from '../../types/IAccount';
 import { formatDate } from '../../utils/date';
+import { useClients } from '../../hooks/useClients';
+
+import { IClientData } from '../../types/IClient';
+import { IAccountDataParams } from '../../types/IAccount';
 import { IRegisterClientsDataParams } from '../../types/IRegisterClients';
+import { IFeedbackDataParams } from '../../types/IFeedback';
 
 interface IClientCardProps {
   client: IClientData;
@@ -20,7 +22,7 @@ interface IClientCardProps {
 export function ClientCard({ client: { id, name, cpf, birthDate } }: IClientCardProps) {
   const { navigate } = useNavigation();
 
-  const { removeClient, editClient } = useClients();
+  const { removeClient } = useClients();
 
   const [isActive, setIsActive] = useState(false);
 
@@ -37,7 +39,26 @@ export function ClientCard({ client: { id, name, cpf, birthDate } }: IClientCard
       },
       {
         text: 'Sim',
-        onPress: () => removeClient(id),
+        onPress: async () => {
+          try {
+            await removeClient(id);
+            navigate('Feedback', {
+              emoji: 'wink',
+              title: 'Sucesso!',
+              info: 'Cliente removido com sucesso.',
+              buttonTitle: 'Continuar',
+              routeName: 'Client',
+            } as IFeedbackDataParams);
+          } catch (error) {
+            navigate('Feedback', {
+              emoji: 'sad',
+              title: 'Erro!',
+              info: error.message,
+              buttonTitle: 'Entendi',
+              routeName: 'Client',
+            } as IFeedbackDataParams);
+          }
+        },
       },
     ]);
   }
@@ -52,26 +73,24 @@ export function ClientCard({ client: { id, name, cpf, birthDate } }: IClientCard
   }
 
   return (
-    <TouchableWithoutFeedback onPress={toggleActive}>
-      <Container>
-        <InfoContainer>
-          <TextInfo>😀 {name}</TextInfo>
-          <TextInfo>📄 {MaskService.toMask('cpf', String(cpf))}</TextInfo>
-          <TextInfo>🎂 {formatDate(birthDate)}</TextInfo>
-        </InfoContainer>
+    <Container>
+      <InfoContainer>
+        <TextInfo>😀 {name}</TextInfo>
+        <TextInfo>📄 {MaskService.toMask('cpf', String(cpf))}</TextInfo>
+        <TextInfo>🎂 {formatDate(birthDate)}</TextInfo>
+      </InfoContainer>
 
-        <TouchableOpacity onPress={toggleActive} activeOpacity={0.8}>
-          {!isActive ? <Arrow name="chevron-down" /> : <Arrow name="chevron-up" />}
-        </TouchableOpacity>
+      <TouchableOpacity onPress={toggleActive}>
+        {!isActive ? <Arrow name="chevron-down" /> : <Arrow name="chevron-up" />}
+      </TouchableOpacity>
 
-        {isActive && (
-          <ButtonsContainer>
-            <CardButton onPress={handleToAccountPage} title="Contas" iconName="credit-card" />
-            <CardButton onPress={handleRemoveClient} title="Remover" iconName="trash-2" />
-            <CardButton onPress={handleEditClient} title="Editar" iconName="edit" />
-          </ButtonsContainer>
-        )}
-      </Container>
-    </TouchableWithoutFeedback>
+      {isActive && (
+        <ButtonsContainer>
+          <CardButton onPress={handleToAccountPage} title="Contas" iconName="credit-card" />
+          <CardButton onPress={handleRemoveClient} title="Remover" iconName="trash-2" />
+          <CardButton onPress={handleEditClient} title="Editar" iconName="edit" />
+        </ButtonsContainer>
+      )}
+    </Container>
   );
 }

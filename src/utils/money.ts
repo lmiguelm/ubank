@@ -12,3 +12,8 @@ export function formatMoneyWhitoutR$(value: number) {
     unit: '',
   });
 }
+
+export function unmaskmMoney(balance: string): number {
+  const result = MaskService.toRawValue('money', balance, { maskType: 'BRL' });
+  return Number(result);
+}

@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
+import { RefreshControl } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+
 import { Container, List } from './styles';
 
 import { PrimaryHeader } from '../../components/PrimaryHeader';
-import { useRoute } from '@react-navigation/native';
 import { AccountStatementCard } from '../../components/AccountStatementCard';
-import { IStatementDataParams } from '../../types/IStatement';
 import { useDeposits } from '../../hooks/useDeposits';
 import { Loading } from '../../components/Loading';
-import { RefreshControl } from 'react-native';
+
+import { IStatementDataParams } from '../../types/IStatement';
 
 export function AccountStatement() {
   const { params } = useRoute();

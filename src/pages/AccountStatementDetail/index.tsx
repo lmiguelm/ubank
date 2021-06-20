@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRoute } from '@react-navigation/native';
 
 import {
   BalanceContainer,
@@ -12,10 +13,11 @@ import {
 } from './styles';
 
 import { SecondHeader } from '../../components/SecondHeader';
-import { useRoute } from '@react-navigation/native';
-import { IAccountStatementrDetailParams } from '../../types/IAccountStatementDetail';
+
 import { formatDateWithHours } from '../../utils/date';
 import { formatMoneyWhitoutR$ } from '../../utils/money';
+
+import { IAccountStatementrDetailParams } from '../../types/IAccountStatementDetail';
 
 export function AccountStatementDetail() {
   const { params } = useRoute();

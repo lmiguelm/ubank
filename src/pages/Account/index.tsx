@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
+import { RefreshControl } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
 import { Container, List } from './styles';
@@ -6,12 +7,10 @@ import { Container, List } from './styles';
 import { PrimaryHeader } from '../../components/PrimaryHeader';
 import { AccountCard } from '../../components/AccountCard';
 import { AccountModal } from './AccountModal';
+import { Loading } from '../../components/Loading';
+import { useAccounts } from '../../hooks/useAccounts';
 
 import { IAccountData, IAccountDataParams } from '../../types/IAccount';
-import { useEffect } from 'react';
-import { useAccounts } from '../../hooks/useAccounts';
-import { Loading } from '../../components/Loading';
-import { RefreshControl } from 'react-native';
 
 export function Account() {
   const { params } = useRoute();

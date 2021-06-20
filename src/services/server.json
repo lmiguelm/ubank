@@ -20,15 +20,27 @@
     },
     {
       "id": "2c8e8a20-b5f8-4a81-a6c3-6d21b408f2e6",
-      "name": "Sebastião Real",
-      "cpf": 25379525962,
-      "birthDate": 366951600000
+      "cpf": 25379525965,
+      "name": "Sebastião costa",
+      "birthDate": -174540819042
     },
     {
       "id": "9f63bbf3-963e-45a8-a03b-bec942a35fa7",
       "name": "Raimunda da Cruz",
       "cpf": 72836436484,
       "birthDate": 696391200000
+    },
+    {
+      "id": "a73fe831-f4d5-4287-98e2-4b133d6c287a",
+      "cpf": 94649464949,
+      "name": "Marcos Antônio",
+      "birthDate": 488146518214
+    },
+    {
+      "id": "0b2c2828-1846-4dbd-8085-3694f551248b",
+      "cpf": 64649464445,
+      "name": "Rodrigo Farias",
+      "birthDate": 1623874783850
     }
   ],
   "accounts": [
@@ -60,22 +72,13 @@
       "balance": 1000
     },
     {
-      "id": "96229a03-33ea-458b-abd2-0fb7bc8f73e1",
-      "number": "95994-9",
-      "createdAt": 1624141462619,
-      "balance": 0,
-      "status": false,
-      "password": "12344",
-      "clientId": "04446c46-7d98-4004-b57b-fcf165ff4767"
-    },
-    {
       "id": "48e4e52b-c75e-4a48-b29c-95230edfe084",
-      "clientId": "04446c46-7d98-4004-b57b-fcf165ff4767",
-      "status": true,
-      "password": "00009",
-      "createdAt": 1624141486272,
       "number": "94994-9",
-      "balance": 138988
+      "createdAt": 1624141486272,
+      "balance": 138988,
+      "status": true,
+      "password": "1234567",
+      "clientId": "04446c46-7d98-4004-b57b-fcf165ff4767"
     },
     {
       "id": "0db90500-890c-40de-8ce4-742720798102",
@@ -103,6 +106,15 @@
       "password": "00000",
       "balance": 0,
       "clientId": "2c8e8a20-b5f8-4a81-a6c3-6d21b408f2e6"
+    },
+    {
+      "id": "52108e31-1d8b-44b7-80fb-aa9874a03a70",
+      "clientId": "04446c46-7d98-4004-b57b-fcf165ff4767",
+      "status": true,
+      "password": "123456",
+      "createdAt": 1622649176689,
+      "number": "88544-8",
+      "balance": 8477
     }
   ],
   "deposits": [
@@ -175,6 +187,20 @@
       "accountId": "0db90500-890c-40de-8ce4-742720798102",
       "description": "Depósito para o Elisa Bernardes, 66262-6 no valor de R$454,84",
       "createdAt": 1624149836876
+    },
+    {
+      "id": "716147d5-e88f-4270-9ef7-66468744f5b9",
+      "value": 4778,
+      "accountId": "52108e31-1d8b-44b7-80fb-aa9874a03a70",
+      "description": "Depósito para o Elisa Bernardes, 88544-8 no valor de R$47,78",
+      "createdAt": 1624214484805
+    },
+    {
+      "id": "a294876d-2eaf-4eb0-a3b0-6eb698efc15a",
+      "value": 3699,
+      "accountId": "52108e31-1d8b-44b7-80fb-aa9874a03a70",
+      "description": "Depósito para o Elisa Bernardes, 88544-8 no valor de R$36,99",
+      "createdAt": 1624220222665
     }
   ]
 }

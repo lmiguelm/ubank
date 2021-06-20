@@ -21,6 +21,10 @@ Antes de executar o projeto, localize o **_packge.json_** e altere a linha 5, co
 
 ![exemplo](.github/exemplo.png)
 
+Também alterar o arquivo **_api.ts_** colocando o IP e HOST que foram inseridos no **_packge.json_**. Como no exemplo abaixo:
+
+![exemplo2](.github/exemplo2.png)
+
 <br>
 
 ## 💻 Como usar

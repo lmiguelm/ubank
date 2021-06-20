@@ -8,10 +8,10 @@ interface ClientContextData {
   loadedClients: boolean;
   loadClients: () => void;
   refreshFilteredClients: () => void;
-  removeClient: (clientId: string) => void;
   filterClients: (filter: string) => void;
-  newClient: (client: IClientData) => void;
-  editClient: (client: IClientData) => void;
+  removeClient: (clientId: string) => Promise<void>;
+  newClient: (client: IClientData) => Promise<void>;
+  editClient: (client: IClientData) => Promise<void>;
 }
 
 interface ClientProvideProps {
