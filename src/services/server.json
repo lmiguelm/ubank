@@ -8,8 +8,8 @@
     },
     {
       "id": "5f39a3d2-413a-4ea3-8fe8-b95bcccc1b0a",
-      "name": "Diogo Samuel",
       "cpf": 78140004596,
+      "name": "Luis Miguel",
       "birthDate": 984193200000
     },
     {
@@ -70,21 +70,21 @@
     },
     {
       "id": "48e4e52b-c75e-4a48-b29c-95230edfe084",
-      "createdAt": 1624141486272,
+      "clientId": "04446c46-7d98-4004-b57b-fcf165ff4767",
       "status": true,
-      "number": "94994-9",
       "password": "00009",
-      "balance": 0,
-      "clientId": "04446c46-7d98-4004-b57b-fcf165ff4767"
+      "createdAt": 1624141486272,
+      "number": "94994-9",
+      "balance": 138988
     },
     {
       "id": "0db90500-890c-40de-8ce4-742720798102",
-      "createdAt": 1623104695129,
+      "clientId": "04446c46-7d98-4004-b57b-fcf165ff4767",
       "status": true,
-      "number": "66262-6",
       "password": "00000",
-      "balance": 0,
-      "clientId": "04446c46-7d98-4004-b57b-fcf165ff4767"
+      "createdAt": 1623104695129,
+      "number": "66262-6",
+      "balance": 45484
     },
     {
       "id": "7d0ce8a3-6e36-4c7d-afb7-0298ee948e92",
@@ -140,6 +140,41 @@
       "accountId": "7d0ce8a3-6e36-4c7d-afb7-0298ee948e92",
       "description": "Depósito para o Raimunda da Cruz, 11111-1 no valor de R$949,12",
       "createdAt": 1624141599349
+    },
+    {
+      "id": "c60a6073-57a8-458f-96c7-f4e2d3eee24e",
+      "value": 4555,
+      "accountId": "48e4e52b-c75e-4a48-b29c-95230edfe084",
+      "description": "Depósito para o Elisa Bernardes, 94994-9 no valor de R$45,55",
+      "createdAt": 1624149677753
+    },
+    {
+      "id": "d3ae596f-f8ff-4c4b-b49c-09986c10014a",
+      "value": 78878,
+      "accountId": "48e4e52b-c75e-4a48-b29c-95230edfe084",
+      "description": "Depósito para o Elisa Bernardes, 94994-9 no valor de R$788,78",
+      "createdAt": 1624149684925
+    },
+    {
+      "id": "cfc82e47-846f-460f-b7ee-35c17478e8a8",
+      "value": 50000,
+      "accountId": "48e4e52b-c75e-4a48-b29c-95230edfe084",
+      "description": "Depósito para o Elisa Bernardes, 94994-9 no valor de R$500,00",
+      "createdAt": 1624149691558
+    },
+    {
+      "id": "8a11ac03-8530-41bc-9142-78005af3ec38",
+      "value": 5555,
+      "accountId": "48e4e52b-c75e-4a48-b29c-95230edfe084",
+      "description": "Depósito para o Elisa Bernardes, 94994-9 no valor de R$55,55",
+      "createdAt": 1624149699509
+    },
+    {
+      "id": "c1985cd7-a3b1-49ff-b5e9-63bb6382934e",
+      "value": 45484,
+      "accountId": "0db90500-890c-40de-8ce4-742720798102",
+      "description": "Depósito para o Elisa Bernardes, 66262-6 no valor de R$454,84",
+      "createdAt": 1624149836876
     }
   ]
 }

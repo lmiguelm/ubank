@@ -2,6 +2,10 @@
 
 ![ubank](.github/Capa.png)
 
+Layout disponível no [Figma](https://www.figma.com/file/CgiDkHWVMnpVw3LAYaRpqr/SHX).
+
+<br>
+
 ## 🚨 IMPORTANTE 🚨
 
 <p>
