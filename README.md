@@ -14,6 +14,7 @@
 <br>
 
 Antes de executar o projeto, localize o **_packge.json_** e altere a linha 5, colocando na frente da flag **"--host"** o IP local de sua máquina. Como no exemplo abaixo:
+
 ![exemplo](.github/exemplo.png)
 
 <br>
