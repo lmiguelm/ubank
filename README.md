@@ -1,6 +1,6 @@
 # 💸 Ubank
 
-![ubank](.github/capa.png)
+![ubank](.github/Capa.png)
 
 ## 🚨 IMPORTANTE 🚨
 
