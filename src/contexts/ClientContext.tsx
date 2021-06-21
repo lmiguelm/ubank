@@ -1,4 +1,5 @@
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { api } from '../services/api';
 import { IClientData } from '../types/IClient';
 
@@ -26,10 +27,12 @@ export function ClientProvider({ children }: ClientProvideProps) {
   const [loadedClients, setLoadedClients] = useState<boolean>(false);
 
   useEffect(() => {
-    loadClients();
+    load();
   }, []);
 
-  async function loadClients() {
+  const loadClients = useCallback(load, []);
+
+  async function load() {
     setLoadedClients(false);
     const { data } = await api.get<IClientData[]>('/clients', {
       params: { _sort: 'name', _order: 'asc' },
@@ -39,71 +42,65 @@ export function ClientProvider({ children }: ClientProvideProps) {
     setLoadedClients(true);
   }
 
-  async function newClient(client: IClientData) {
+  const newClient = useCallback(async (client: IClientData) => {
     try {
       setLoadedClients(false);
       await api.post('/clients', client);
 
-      const newClientsArray = [...clients, client];
-
-      setFilteredClients(newClientsArray);
-      setClients(newClientsArray);
+      setFilteredClients((oldstate) => [...oldstate, client]);
+      setClients((oldstate) => [...oldstate, client]);
     } catch {
       throw new Error('Não foi possível cadastrar este usuário');
     } finally {
       setLoadedClients(true);
     }
-  }
+  }, []);
 
-  async function removeClient(clientId: string) {
+  const removeClient = useCallback(async (clientId: string) => {
     setLoadedClients(false);
     try {
       await api.delete(`/clients/${clientId}`);
-      const filtered = clients.filter((client) => client.id !== clientId);
-      setFilteredClients(filtered);
-      setClients(filtered);
+
+      setFilteredClients((oldstate) => oldstate.filter((client) => client.id !== clientId));
+      setClients((oldstate) => oldstate.filter((client) => client.id !== clientId));
     } catch {
       throw new Error('Não foi possível deletar este usuário');
     } finally {
       setLoadedClients(true);
     }
-  }
+  }, []);
 
-  async function editClient(client: IClientData) {
+  const editClient = useCallback(async (client: IClientData) => {
     setLoadedClients(false);
 
     try {
       await api.put(`/clients/${client.id}`, client);
 
-      const newArrayClients = clients.map((c) => {
-        if (c.id === client.id) {
-          return client;
-        }
-        return c;
-      });
-
-      setClients(newArrayClients);
-      setFilteredClients(newArrayClients);
+      setFilteredClients((oldstate) => oldstate.map((c) => (c.id === client.id ? c : client)));
+      setClients((oldstate) => oldstate.map((c) => (c.id === client.id ? c : client)));
     } catch {
       throw new Error('Não foi possível editar este cliente');
     } finally {
       setLoadedClients(true);
     }
-  }
+  }, []);
 
-  function filterClients(filter: string) {
-    setFilteredClients(
-      clients.filter((client) => {
-        if (client.name.trim().toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase())) {
-          return client;
-        }
-      })
-    );
-  }
+  const filterClients = useCallback(
+    (filter: string) => {
+      setFilteredClients(
+        clients.filter((client) => {
+          if (client.name.trim().toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase())) {
+            return client;
+          }
+        })
+      );
+    },
+    [clients]
+  );
 
-  function refreshFilteredClients() {
+  const refreshFilteredClients = useCallback(() => {
     setFilteredClients(clients);
-  }
+  }, [clients]);
 
   return (
     <ClientContext.Provider

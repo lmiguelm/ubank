@@ -30,7 +30,7 @@ export function Deposit() {
   const { params } = useRoute();
   const { account, client } = params as IDepositDataParams;
 
-  const { newDepoist, loadedDeposits } = useDeposits();
+  const { newDeposit, loadedDeposits } = useDeposits();
 
   let inputRef = useRef<TextMaskInstance>(null);
 
@@ -78,7 +78,7 @@ export function Deposit() {
         createdAt: Date.now(),
       };
 
-      await newDepoist(deposit, account);
+      await newDeposit(deposit, account);
 
       navigate('Feedback', {
         buttonTitle: 'Continuar',

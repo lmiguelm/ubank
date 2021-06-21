@@ -110,6 +110,8 @@ export function AccountModal({
       clientId,
     };
 
+    closeModal();
+
     try {
       await newAccount(data);
 
@@ -144,9 +146,10 @@ export function AccountModal({
       clientId,
     };
 
+    closeModal();
+
     try {
       await editAccount(data);
-
       navigate('Feedback', {
         emoji: 'wink',
         title: 'Opa!',

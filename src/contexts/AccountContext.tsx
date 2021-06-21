@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useCallback } from 'react';
 import { createContext, ReactNode } from 'react';
 import { api } from '../services/api';
 import { IAccountData } from '../types/IAccount';
@@ -28,7 +29,7 @@ export function AccountProvider({ children }: IAcccountProviderProps) {
   const [filteredAccounts, setFilteredAccounts] = useState<IAccountData[]>([]);
   const [loadedAccounts, setLoadedAccounts] = useState<boolean>(false);
 
-  async function loadAccounts(clientId: string) {
+  const loadAccounts = useCallback(async (clientId: string) => {
     setLoadedAccounts(false);
     const { data } = await api.get<IAccountData[]>(`/accounts`, {
       params: { clientId, _sort: 'createdAt', _order: 'desc' },
@@ -36,68 +37,66 @@ export function AccountProvider({ children }: IAcccountProviderProps) {
     setAccounts(data);
     setFilteredAccounts(data);
     setLoadedAccounts(true);
-  }
+  }, []);
 
-  async function newAccount(account: IAccountData) {
+  const newAccount = useCallback(async (account: IAccountData) => {
     try {
       setLoadedAccounts(false);
       await api.post('/accounts', account);
 
-      const newAccountArray = [...accounts, account];
-
-      setFilteredAccounts(newAccountArray);
-      setAccounts(newAccountArray);
+      setFilteredAccounts((oldstate) => [...oldstate, account]);
+      setAccounts((oldstate) => [...oldstate, account]);
     } catch {
       throw new Error('Não foi possível cadastrar esta conta');
     } finally {
       setLoadedAccounts(true);
     }
-  }
+  }, []);
 
-  async function editAccount(account: IAccountData) {
+  const editAccount = useCallback(async (account: IAccountData) => {
     try {
       setLoadedAccounts(false);
       await api.put(`/accounts/${account.id}`, account);
 
-      const arrayAccountUpdated = accounts.map((acc) => {
-        if (acc.id == account.id) {
-          return account;
-        }
-        return acc;
-      });
+      setFilteredAccounts((oldstate) =>
+        oldstate.map((acc) => (acc.id === account.id ? account : acc))
+      );
 
-      setFilteredAccounts(arrayAccountUpdated);
-      setAccounts(arrayAccountUpdated);
+      setAccounts((oldstate) => oldstate.map((acc) => (acc.id === account.id ? account : acc)));
     } catch {
       throw new Error('Não foi possível editar esta conta');
     } finally {
       setLoadedAccounts(true);
     }
-  }
+  }, []);
 
-  async function removeAccount(accountId: string) {
+  const removeAccount = useCallback(async (accountId: string) => {
     setLoadedAccounts(false);
     try {
       await api.delete(`/accounts/${accountId}`);
-      const filtered = accounts.filter((account) => account.id !== accountId);
-      setFilteredAccounts(filtered);
-      setAccounts(filtered);
+      setFilteredAccounts((oldstate) => oldstate.filter((account) => account.id !== accountId));
+      setAccounts((oldstate) => oldstate.filter((account) => account.id !== accountId));
     } catch {
       throw new Error('Não foi possível deletar este usuário');
     } finally {
       setLoadedAccounts(true);
     }
-  }
+  }, []);
 
-  function filterAccounts(filter: string) {
-    setFilteredAccounts(
-      accounts.filter((account) => {
-        if (account.number.trim().toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase())) {
-          return account;
-        }
-      })
-    );
-  }
+  const filterAccounts = useCallback(
+    (filter: string) => {
+      setFilteredAccounts(
+        accounts.filter((account) => {
+          if (
+            account.number.trim().toLocaleLowerCase().includes(filter.trim().toLocaleLowerCase())
+          ) {
+            return account;
+          }
+        })
+      );
+    },
+    [accounts]
+  );
 
   function refreshFilteredAccounts() {
     setFilteredAccounts(accounts);

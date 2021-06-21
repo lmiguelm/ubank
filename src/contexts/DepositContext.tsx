@@ -1,4 +1,5 @@
 import React, { useState, createContext, ReactNode } from 'react';
+import { useCallback } from 'react';
 import { useAccounts } from '../hooks/useAccounts';
 
 import { api } from '../services/api';
@@ -12,7 +13,7 @@ interface IDepositContext {
   filteredDeposits: IDepositData[];
   loadedDeposits: boolean;
   loadDeposits: (accountId: string) => Promise<void>;
-  newDepoist: (deposit: IDepositData, account: IAccountData) => Promise<void>;
+  newDeposit: (deposit: IDepositData, account: IAccountData) => Promise<void>;
   filterDeposits: (filter: string) => void;
   refreshFilteredDeposits: () => void;
 }
@@ -30,7 +31,7 @@ export function DepositProvider({ children }: IDepositProps) {
   const [filteredDeposits, setFilteredDeposits] = useState<IDepositData[]>([]);
   const [loadedDeposits, setLoadedDeposits] = useState<boolean>(true);
 
-  async function loadDeposits(accountId: string) {
+  const loadDeposits = useCallback(async (accountId: string) => {
     setLoadedDeposits(false);
     const { data } = await api.get<IDepositData[]>(`/deposits`, {
       params: { accountId, _sort: 'createdAt', _order: 'desc' },
@@ -38,39 +39,42 @@ export function DepositProvider({ children }: IDepositProps) {
     setDeposits(data);
     setFilteredDeposits(data);
     setLoadedDeposits(true);
-  }
+  }, []);
 
-  async function newDepoist(deposit: IDepositData, account: IAccountData) {
-    try {
-      setLoadedDeposits(false);
-      await api.post('/deposits', deposit);
+  const newDeposit = useCallback(
+    async (deposit: IDepositData, account: IAccountData) => {
+      try {
+        setLoadedDeposits(false);
+        await api.post('/deposits', deposit);
+        await editAccount({ ...account, balance: account.balance + deposit.value });
 
-      const newDepositArray = [...deposits, deposit];
-
-      setFilteredDeposits(newDepositArray);
-      setDeposits(newDepositArray);
-
-      await editAccount({ ...account, balance: account.balance + deposit.value });
-    } catch {
-      throw new Error('Não foi possível realizar este depósito');
-    } finally {
-      setLoadedDeposits(true);
-    }
-  }
-
-  function filterDeposits(filter: string) {
-    const filteredDeposits = deposits.filter((deposit) => {
-      if (formatDate(Number(filter)) === formatDate(deposit.createdAt)) {
-        return deposit;
+        setFilteredDeposits((oldstate) => [...oldstate, deposit]);
+        setDeposits((oldstate) => [...oldstate, deposit]);
+      } catch {
+        throw new Error('Não foi possível realizar este depósito');
+      } finally {
+        setLoadedDeposits(true);
       }
-    });
+    },
+    [editAccount]
+  );
 
-    setFilteredDeposits(filteredDeposits);
-  }
+  const filterDeposits = useCallback(
+    (filter: string) => {
+      const filteredDeposits = deposits.filter((deposit) => {
+        if (formatDate(Number(filter)) === formatDate(deposit.createdAt)) {
+          return deposit;
+        }
+      });
 
-  function refreshFilteredDeposits() {
+      setFilteredDeposits(filteredDeposits);
+    },
+    [deposits]
+  );
+
+  const refreshFilteredDeposits = useCallback(() => {
     setFilteredDeposits(deposits);
-  }
+  }, [deposits]);
 
   return (
     <DepositContext.Provider
@@ -80,7 +84,7 @@ export function DepositProvider({ children }: IDepositProps) {
         filteredDeposits,
         loadDeposits,
         loadedDeposits,
-        newDepoist,
+        newDeposit,
       }}
     >
       {children}
