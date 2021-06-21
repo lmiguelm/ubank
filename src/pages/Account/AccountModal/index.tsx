@@ -75,17 +75,15 @@ export function AccountModal({
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
   useEffect(() => {
-    delay(500).then(() => numberRef.current?.getElement().focus());
-  }, [visible]);
-
-  useEffect(() => {
     if (account && !!Object.values(account).length) {
       setNumber(account.number);
       setCreatedAt(toDate(account.createdAt));
       setStatus(account.status);
       setPassword(account.password);
+    } else {
+      delay(500).then(() => numberRef.current?.getElement().focus());
     }
-  }, [account]);
+  }, [account, visible]);
 
   useEffect(() => {
     if (password == confirmPassword && password.length >= 5 && number.length == 7) {

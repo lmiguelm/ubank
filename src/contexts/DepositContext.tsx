@@ -13,7 +13,7 @@ interface IDepositContext {
   loadedDeposits: boolean;
   loadDeposits: (accountId: string) => Promise<void>;
   newDepoist: (deposit: IDepositData, account: IAccountData) => Promise<void>;
-  filterDepositts: (filter: string) => void;
+  filterDeposits: (filter: string) => void;
   refreshFilteredDeposits: () => void;
 }
 
@@ -58,7 +58,7 @@ export function DepositProvider({ children }: IDepositProps) {
     }
   }
 
-  function filterDepositts(filter: string) {
+  function filterDeposits(filter: string) {
     const filteredDeposits = deposits.filter((deposit) => {
       if (formatDate(Number(filter)) === formatDate(deposit.createdAt)) {
         return deposit;
@@ -76,7 +76,7 @@ export function DepositProvider({ children }: IDepositProps) {
     <DepositContext.Provider
       value={{
         refreshFilteredDeposits,
-        filterDepositts,
+        filterDeposits,
         filteredDeposits,
         loadDeposits,
         loadedDeposits,

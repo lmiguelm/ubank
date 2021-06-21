@@ -11,6 +11,7 @@ import { Loading } from '../../components/Loading';
 import { useAccounts } from '../../hooks/useAccounts';
 
 import { IAccountData, IAccountDataParams } from '../../types/IAccount';
+import { NotFound } from '../../components/NotFound';
 
 export function Account() {
   const { params } = useRoute();
@@ -56,17 +57,24 @@ export function Account() {
           onRefresh={refreshFilteredAccounts}
         />
 
-        <List
-          data={filteredAccounts}
-          keyExtractor={(item: any) => String(item.id)}
-          renderItem={({ item }: any) => (
-            <AccountCard account={item} client={client} key={item.id} />
-          )}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl refreshing={!loadAccounts} onRefresh={() => loadAccounts(client.id)} />
-          }
-        />
+        {filteredAccounts.length > 0 ? (
+          <List
+            data={filteredAccounts}
+            keyExtractor={(item: any) => String(item.id)}
+            renderItem={({ item }: any) => (
+              <AccountCard account={item} client={client} key={item.id} />
+            )}
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={!loadAccounts}
+                onRefresh={() => loadAccounts(client.id)}
+              />
+            }
+          />
+        ) : (
+          <NotFound title="Cliente em questão não possui nenhuma conta cadastrada no sistema." />
+        )}
       </Container>
 
       <AccountModal

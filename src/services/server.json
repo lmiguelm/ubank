@@ -16,7 +16,7 @@
       "id": "f5f9efa5-0ebb-4968-8d56-8c45373cddd9",
       "cpf": 21237486173,
       "name": "Leonardo Santana",
-      "birthDate": 1624145586105
+      "birthDate": 109380786105
     },
     {
       "id": "2c8e8a20-b5f8-4a81-a6c3-6d21b408f2e6",
@@ -40,7 +40,7 @@
       "id": "0b2c2828-1846-4dbd-8085-3694f551248b",
       "cpf": 64649464445,
       "name": "Rodrigo Farias",
-      "birthDate": 1623874783850
+      "birthDate": 898028383850
     }
   ],
   "accounts": [
@@ -82,12 +82,12 @@
     },
     {
       "id": "0db90500-890c-40de-8ce4-742720798102",
-      "clientId": "04446c46-7d98-4004-b57b-fcf165ff4767",
-      "status": true,
-      "password": "00000",
-      "createdAt": 1623104695129,
       "number": "66262-6",
-      "balance": 45484
+      "createdAt": 1623104695129,
+      "balance": 45484,
+      "status": false,
+      "password": "12345",
+      "clientId": "04446c46-7d98-4004-b57b-fcf165ff4767"
     },
     {
       "id": "7d0ce8a3-6e36-4c7d-afb7-0298ee948e92",

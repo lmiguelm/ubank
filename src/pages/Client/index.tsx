@@ -12,6 +12,7 @@ import { useClients } from '../../hooks/useClients';
 
 import { IRegisterClientsDataParams } from '../../types/IRegisterClients';
 import { IClientData } from '../../types/IClient';
+import { NotFound } from '../../components/NotFound';
 
 export function Client() {
   const { navigate } = useNavigation();
@@ -38,13 +39,17 @@ export function Client() {
         onRefresh={refreshFilteredClients}
       />
 
-      <List
-        data={filteredClients}
-        keyExtractor={(item: any) => String(item.id)}
-        renderItem={({ item }: any) => <ClientCard client={item} key={item.id} />}
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={!loadedClients} onRefresh={loadClients} />}
-      />
+      {filteredClients.length > 0 ? (
+        <List
+          data={filteredClients}
+          keyExtractor={(item: any) => String(item.id)}
+          renderItem={({ item }: any) => <ClientCard client={item} key={item.id} />}
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={!loadedClients} onRefresh={loadClients} />}
+        />
+      ) : (
+        <NotFound title="Não há nenhum cliente cadastrado." />
+      )}
     </Container>
   );
 }
