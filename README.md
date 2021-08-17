@@ -2,6 +2,8 @@
 
 ![ubank](.github/Capa.png)
 
+🔛 **Teste agora: [UbankSHX](https://expo.dev/@lmiguelm/ubank-shx).**
+
 Layout disponível no [Figma](https://www.figma.com/file/CgiDkHWVMnpVw3LAYaRpqr/SHX).
 
 <br>
